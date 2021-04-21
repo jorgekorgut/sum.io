@@ -15,6 +15,7 @@ import common.environment.ActionHandler;
 import common.environment.CircleColider;
 import common.environment.CollectableBoost;
 import common.environment.GameObject;
+import common.environment.PatrolPoint;
 import common.environment.Platform;
 import common.environment.Player;
 import server.LaunchServer;
@@ -31,6 +32,7 @@ public class EnvironmentHandler
 	
 	private ArrayList<Player> playerMap;
 	private ArrayList<GameObject> interactableObjects;
+	private LinkedList<PatrolPoint> patrolPoints;
 	
 	private Platform platform;
 	private LaunchServer callback;
@@ -44,17 +46,21 @@ public class EnvironmentHandler
 	private int playersRemainingCount = 0;
 	private double friction = 0.02;
 	
-	private int aparitionBoostTime = 2000; //
+	private int aparitionBoostTime = 12000; //
 	
 	private int boostTime = 0;
+	private int patrolTime = 0;
+	private int aparitionPatrolPoint = 200;
 	
 	//FIXME: temp
 	private static int playerNumber = 1;
+	
 	
 	public EnvironmentHandler(LaunchServer callback)
 	{
 		playerMap = new ArrayList<Player>();
 		interactableObjects = new ArrayList<GameObject>();
+		patrolPoints = new LinkedList<PatrolPoint>();
 		
 		this.callback = callback;
 		syncPack = new SyncPack();
@@ -71,6 +77,7 @@ public class EnvironmentHandler
 	public SyncPack getSyncPack() {return syncPack;}
 	public InteligenceBrain getInteligenceBrain() {return inteligenceBrain;}
 	public ArrayList<GameObject> getInteractableObjects(){return interactableObjects;}
+	public LinkedList<PatrolPoint> getPatrolPoints() {return patrolPoints;}
 	
 	public void connectPlayer(String clientIP)
 	{
@@ -137,6 +144,21 @@ public class EnvironmentHandler
 							});
 	}
 	
+	private void addPatrolPoint()
+	{
+		if(patrolTime*updateRate*((double)playerMap.size()) >= aparitionPatrolPoint && patrolPoints.size()<5*playerMap.size())
+		{
+			int spawnRangeX = 600;
+			int spawnRangeY = 600;
+			int randomX = (int) (Math.random()*spawnRangeX)-spawnRangeX/2;
+			int randomY = (int) (Math.random()*spawnRangeY)-spawnRangeY/2;
+			
+			PatrolPoint pp = new PatrolPoint("null",randomX,randomY,50,50);
+			patrolPoints.add(pp);
+			patrolTime=0;
+		}
+	}
+	
 	private void addBoostHandler()
 	{	
 		if(boostTime*updateRate >= aparitionBoostTime)
@@ -144,8 +166,8 @@ public class EnvironmentHandler
 			int spawnRangeX = 700;
 			int spawnRangeY = 700;
 			
-			int randonX = (int) (Math.random()*spawnRangeX)-spawnRangeX/2;
-			int randonY = (int) (Math.random()*spawnRangeY)-spawnRangeY/2;
+			int randomX = (int) (Math.random()*spawnRangeX)-spawnRangeX/2;
+			int randomY = (int) (Math.random()*spawnRangeY)-spawnRangeY/2;
 			
 			int maxTry = 30;
 			CollectableBoost cb = null;
@@ -155,18 +177,16 @@ public class EnvironmentHandler
 			while(count<maxTry && !isUnique)
 			{
 				isUnique = true;
-				
 				Iterator<GameObject> itr = interactableObjects.iterator();
 				do
 				{
-					
 					if(interactableObjects.isEmpty())
 					{
-						cb = new CollectableBoost("boost", randonX, randonY, 50, 50);
+						cb = new CollectableBoost("boost", randomX, randomY, 50, 50);
 						break;
 					}
 					GameObject go = itr.next();
-					cb = new CollectableBoost("boost", randonX, randonY, 50, 50);
+					cb = new CollectableBoost("boost", randomX, randomY, 50, 50);
 					if(((CircleColider)go).hasCollidedTo(cb) && go.isAwake())
 					{
 						isUnique = false;
@@ -174,7 +194,6 @@ public class EnvironmentHandler
 					}
 				}
 				while(itr.hasNext());
-				
 				count ++;
 			}
 			boostTime = 0;
@@ -231,6 +250,19 @@ public class EnvironmentHandler
 					}
 				}
 				
+				//FIXME: A better way to remove an object from an iteration.
+				GameObject toRemoveObj = null;
+				
+				
+				for(GameObject go: patrolPoints)
+				{
+					if(go.isAwake() & ((CircleColider)go).hasCollidedTo(p1))
+					{
+						toRemoveObj = go;
+					}
+				}
+				patrolPoints.remove(toRemoveObj);
+				
 			}
 		}
 	}
@@ -281,6 +313,7 @@ public class EnvironmentHandler
 	private void updateTime()
 	{
 		boostTime++;
+		patrolTime++;
 	}
 	
 	//Take care to insert codes here, because this methode is called really fast
@@ -289,6 +322,7 @@ public class EnvironmentHandler
 		colisionHanlder();
 		movementHandler();
 		addBoostHandler();
+		addPatrolPoint();
 		
 		updateTime();
 	}

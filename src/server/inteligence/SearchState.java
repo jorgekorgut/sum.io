@@ -2,11 +2,11 @@ package server.inteligence;
 
 import common.environment.GameObject;
 
-public class SearchBoostState extends AbstractFSMState
+public class SearchState extends AbstractFSMState
 {
 	private GameObject target;
 	
-	public SearchBoostState(PlayerBot player, GameObject target) 
+	public SearchState(PlayerBot player, GameObject target) 
 	{
 		super(player);
 		this.target = target;
@@ -22,8 +22,8 @@ public class SearchBoostState extends AbstractFSMState
 		double directionY = wishPosY - player.getY();
 		
 		player.moveTo(directionX,directionY);
-
-		if(!target.isAwake())
+		
+		if(!target.isAwake()|| target == null)
 		{
 			target = null;
 			this.exitState();

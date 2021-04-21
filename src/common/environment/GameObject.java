@@ -13,7 +13,6 @@ public class GameObject implements Comparable<GameObject>, java.io.Serializable{
 	
 	private boolean isAbsoluteCoordinates = false;
 	
-	
 	public GameObject (String name, double x,double y, int width, int height)
 	{
 		this.name = name;
@@ -28,6 +27,7 @@ public class GameObject implements Comparable<GameObject>, java.io.Serializable{
 	{
 		this(name,x,y,width,height);
 		this.renderingPriority = renderingPriority;
+		this.isAwake = isAwake;
 	}
 	
 	/*
@@ -62,10 +62,10 @@ public class GameObject implements Comparable<GameObject>, java.io.Serializable{
 		//To let the compareTo consistent
 		if(go.equals(this))
 		{
-			return 1;
+			return 0;
 		}
 		
-		return 0;
+		return 1;
 	}
 	
 	@Override

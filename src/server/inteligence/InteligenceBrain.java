@@ -34,6 +34,7 @@ public class InteligenceBrain
 	}
 	
 	public EnvironmentHandler getEnvironmentHandler() {return callback;}
+	public  ArrayList<PlayerBot> getBots(){return bots;}
 	
 	public void createBot(int botX,int botY)
 	{

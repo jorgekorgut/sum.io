@@ -3,6 +3,7 @@ package client.engine;
 public class RenderThread extends Thread 
 {
 		private int framesPerSecond;
+		private int cleanRate;
 		private ScreenRender callback;
 		
 		public RenderThread(ScreenRender callback, int framesPerSecond)
@@ -15,18 +16,19 @@ public class RenderThread extends Thread
 		public void run()
 		{
 			boolean quitThread = false;
-			double time0 = System.currentTimeMillis();
+			double timeFPS0 = System.currentTimeMillis();
 			
 			while(!quitThread)
 			{
 				double time = System.currentTimeMillis();
-				double deltaTime = time - time0;
+				double deltaTimeFPS = time - timeFPS0;
 				
-				if(deltaTime >= 1000/framesPerSecond)
+				if(deltaTimeFPS >= 1000/framesPerSecond)
 				{
 					callback.draw();
-					time0 = time;
+					timeFPS0 = time;
 				}
+				
 			}
 		}
 }

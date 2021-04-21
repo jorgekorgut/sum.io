@@ -1,6 +1,11 @@
 package client.environment;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
+
+import javax.swing.Timer;
+
 import client.MainClient;
 import common.communication.SyncPack;
 import common.environment.CollectableBoost;
@@ -33,13 +38,25 @@ public class EnvironmentHandler
 		this.callback = callback;
 	}
 
-	public int getRemainingPlayers()
-	{
-		return playersCount;
-	}
-	
+	public int getRemainingPlayers(){return playersCount;}
 	public Player getPlayerClient() {return player;}
 	
+	private void updateEnvironment()
+	{
+		for(Player p: playerMap)
+		{
+			if(p.isAwake() && p.getFlagCollision())
+			{
+				callback.getEngineHandler().getAnimationHandler().onColision(p,player);
+			}
+		}
+		callback.getEngineHandler().getAnimationHandler().update();
+	}
+	
+	private void onEnvironmentStart()
+	{
+		callback.getEngineHandler().getAnimationHandler().onEnvironmentStart(player);
+	}
 	
 	public void syncClient(SyncPack sPack)
 	{
@@ -56,8 +73,10 @@ public class EnvironmentHandler
 				{
 					player = p;
 					callback.getEngineHandler().getInputHandler().setPlayer(p);
+					callback.getEngineHandler().getAnimationHandler().setClient(p);
 				}
 			}
+			onEnvironmentStart();
 		}
 		
 		//Update playerState.
@@ -93,5 +112,6 @@ public class EnvironmentHandler
 		}
 		
 		callback.getEngineHandler().getUserInterface().update();
+		updateEnvironment();
 	}
 }

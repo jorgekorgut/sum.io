@@ -13,8 +13,8 @@ public class Player extends GameObject implements CircleColider
 	
 	private double speedX = 0;
 	private double speedY = 0;
-	private double accX = 2.7;
-	private double accY = 2.7;
+	private double accX = 2.4;
+	private double accY = 2.4;
 	
 	private int stunTime = 500;
 	private boolean flagColision = false;
@@ -31,13 +31,14 @@ public class Player extends GameObject implements CircleColider
 		this.radiusColider = width/2;
 	}
 	
-	public Player(String name, double x, double y, int width, int height, String playerIP,int priorityRender,boolean isAwake,int boostQuantity) 
+	public Player(String name, double x, double y, int width, int height, String playerIP,int priorityRender,boolean isAwake,int boostQuantity, boolean flagColision) 
 	{
 		super(name, x, y, width, height, priorityRender);
 		this.playerIP = playerIP;
 		this.radiusColider = width/2;
 		this.isAwake = isAwake;
 		this.boostQuantity = boostQuantity;
+		this.flagColision = flagColision;
 	}
 
 	public String getPlayerIP() {return playerIP;}
@@ -51,8 +52,8 @@ public class Player extends GameObject implements CircleColider
 	public void setAccY(double accY) { this.accY = accY;}
 	
 	public int getRadiusColider() {return radiusColider;}
-	public boolean getFlagColision() {return flagColision;}
-	public void setFlagColision(boolean flagColision) {this.flagColision = flagColision;}
+	public boolean getFlagCollision() {return flagColision;}
+	public void setFlagCollision(boolean flagColision) {this.flagColision = flagColision;}
 	
 	public int getBoostQuantity(){return boostQuantity;}
 	
@@ -92,15 +93,15 @@ public class Player extends GameObject implements CircleColider
 	private void colisionPlayerHandler(Player obj2)
 	{
 		//Remove the control from the player to handle the colision
-		if(!getFlagColision())
+		if(!getFlagCollision())
 		{
 			new RemoveControls(this,stunTime);
-			setFlagColision(true);
+			setFlagCollision(true);
 		}
-		if(!obj2.getFlagColision())
+		if(!obj2.getFlagCollision())
 		{
 			new RemoveControls(((Player)obj2),stunTime);
-			obj2.setFlagColision(true);
+			obj2.setFlagCollision(true);
 		}
 		
 		double tempX1 = this.getX();

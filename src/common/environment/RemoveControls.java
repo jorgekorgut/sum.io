@@ -45,7 +45,7 @@ public class RemoveControls extends Thread
 		*/
 		player.setAccX(accX1);
 		player.setAccY(accY1);
-		player.setFlagColision(false);
+		player.setFlagCollision(false);
 	}
 
 }

@@ -60,7 +60,7 @@ public class FollowState extends AbstractFSMState
 			player.attackBoost();
 		}
 		//Lose the target when mission accomplished
-		if(!target.isAwake())
+		if(!target.isAwake() || target == null)
 		{
 			this.exitState();	
 			return;

@@ -3,6 +3,7 @@ package client.engine;
 import javax.swing.JFrame;
 
 import client.MainClient;
+import client.engine.animation.AnimationHandler;
 import common.communication.ActionPack;
 import common.environment.ActionHandler;
 
@@ -10,6 +11,7 @@ public class EngineHandler {
 
 	private InputHandler inputHandler;
 	private ScreenRender screenRender;
+	private AnimationHandler animationHandler;
 	private Window window;
 	private MainClient callback;
 	private UserInterface userInterface;
@@ -26,6 +28,7 @@ public class EngineHandler {
 		this.window.getJFrame().requestFocus();
 		window.getJFrame().addKeyListener(new KeyboardListener(inputHandler));
 		
+		this.animationHandler = new AnimationHandler(this);
 		userInterface = new UserInterface(this);
 	}
 	
@@ -34,6 +37,7 @@ public class EngineHandler {
 	public InputHandler getInputHandler() { return inputHandler;}
 	public Window getWindow() { return window;}
 	public UserInterface getUserInterface() {return userInterface;}
+	public AnimationHandler getAnimationHandler() {return animationHandler;}
 	
 	public void sendActionPack(ActionPack aPack)
 	{

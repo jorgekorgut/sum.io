@@ -1,11 +1,13 @@
 package common.environment;
 
 public interface CircleColider 
-{
+{	
 	public abstract double getX();
 	public abstract double getY();
 	public abstract int getRadiusColider();
 	public abstract void onColision(CircleColider obj2);
+	public boolean getFlagCollision();
+	public void setFlagCollision(boolean value);
 	
 	public default boolean hasCollidedTo(CircleColider obj2)
 	{

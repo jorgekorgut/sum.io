@@ -2,8 +2,9 @@ package common.environment;
 
 public class CollectableBoost extends GameObject implements CircleColider
 {
-	
 	private int boostGain = 50;
+	private boolean flagColision = false;
+	
 	public CollectableBoost(String name, double x, double y, int width, int height) 
 	{
 		super(name, x, y, width, height,1000);
@@ -26,6 +27,19 @@ public class CollectableBoost extends GameObject implements CircleColider
 	{
 		return width/2;
 	}
+	
+	@Override
+	public boolean getFlagCollision()
+	{
+		return flagColision;
+	}
+	
+	@Override
+	public void setFlagCollision(boolean value) 
+	{
+		flagColision = value;
+	}
+	
 
 	@Override
 	public void onColision(CircleColider obj2) 
@@ -33,6 +47,7 @@ public class CollectableBoost extends GameObject implements CircleColider
 		if(obj2 instanceof Player)
 		{
 			((Player)obj2).addBoost(boostGain);
+			flagColision = true;
 			sleepObject();
 		}
 	}

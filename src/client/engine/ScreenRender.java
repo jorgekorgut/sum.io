@@ -16,6 +16,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import javax.imageio.ImageIO;
 
+import client.engine.animation.AnimationObject;
+
 public class ScreenRender{
 	
 	private int windowWidth;
@@ -30,7 +32,7 @@ public class ScreenRender{
 	//FIXME: try to find something better in the future.
 	private Hashtable<String,BufferedImage> imageMap = null;
 	
-	private final int TEORICAL_FPS = 60;
+	private final int TEORICAL_FPS = 100;
 	private int realFps = TEORICAL_FPS;
 	private double oldT = 0;
 	
@@ -64,7 +66,6 @@ public class ScreenRender{
 		this.originY = y;
 	}
 	
-	
 	public void addToRender(GameObject go)
 	{
 		//Replace contains method by this explicit loop to take advantage of it and update X and Y position.		
@@ -78,6 +79,7 @@ public class ScreenRender{
 				return;
 			}
 		}
+		System.out.println("renderingQueue: "+ renderingQueue.size());
 		renderingQueue.add(go);
 	}
 	
@@ -149,6 +151,14 @@ public class ScreenRender{
 						drawGameObject(g,go);
 					}
 					
+				}
+				
+				for(GameObject go: renderingQueue)
+				{
+					if(go instanceof AnimationObject)
+					{
+						((AnimationObject)go).draw(g);
+					}
 				}
 				
 				for(GameObject go: renderingQueue)
