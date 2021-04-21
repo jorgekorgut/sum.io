@@ -2,29 +2,44 @@ package common.environment;
 
 import java.io.IOException;
 
+import server.inteligence.PlayerBot;
+
 public class Player extends GameObject implements CircleColider
 {
-	private final int MAX_SPEED = 15;
-	private final int MAX_BOOST = 25;
+	private final int max_speed = 20;
 	
 	private String playerIP;
 	private int radiusColider;
 	
 	private double speedX = 0;
 	private double speedY = 0;
-	private double accX = 0.8;
-	private double accY = 0.8;
+	private double accX = 2.7;
+	private double accY = 2.7;
 	
-	private int stunTime = 1000;
+	private int stunTime = 500;
 	private boolean flagColision = false;
 	
-	public Player(String name, int x, int y, int width, int height, String playerIP,int priorityRender) 
+	private int speedBoost = 30;
+	private int boostMax = 100;
+	private int boostQuantity = boostMax;
+	private int boostCost = 3;
+	
+	public Player(String name, double x, double y, int width, int height,String playerIP ,int priorityRender) 
 	{
 		super(name, x, y, width, height, priorityRender);
 		this.playerIP = playerIP;
 		this.radiusColider = width/2;
 	}
 	
+	public Player(String name, double x, double y, int width, int height, String playerIP,int priorityRender,boolean isAwake,int boostQuantity) 
+	{
+		super(name, x, y, width, height, priorityRender);
+		this.playerIP = playerIP;
+		this.radiusColider = width/2;
+		this.isAwake = isAwake;
+		this.boostQuantity = boostQuantity;
+	}
+
 	public String getPlayerIP() {return playerIP;}
 	public double getSpeedX() {return speedX;}
 	public double getSpeedY() {return speedY;}
@@ -39,8 +54,10 @@ public class Player extends GameObject implements CircleColider
 	public boolean getFlagColision() {return flagColision;}
 	public void setFlagColision(boolean flagColision) {this.flagColision = flagColision;}
 	
+	public int getBoostQuantity(){return boostQuantity;}
+	
 	public boolean equals(Object o)
-	{
+	{	
 		if(o == null)
 		{
 			return false;
@@ -50,6 +67,7 @@ public class Player extends GameObject implements CircleColider
 			return false;
 		}
 		Player p = (Player)o;
+		
 		if(!( p.getPlayerIP().equals(this.playerIP)))
 		{
 			return false;
@@ -60,7 +78,7 @@ public class Player extends GameObject implements CircleColider
 	public String toString()
 	{
 		//FIXME: Hard coded
-		return "P:"+ this.getName();
+		return "P:"+ this.getPlayerIP();
 	}
 	
 	public void onColision(CircleColider obj2)
@@ -142,17 +160,36 @@ public class Player extends GameObject implements CircleColider
 	
 	public void accelerateX(int direction) 
 	{
-		if( ! ((speedY*speedY) + Math.pow((speedX + accX * direction),2) > MAX_SPEED*MAX_SPEED))
+		if( ! (Math.pow(speedY,2) + Math.pow((speedX + accX * direction),2) >  Math.pow(max_speed,2)))
 		{
 			speedX = (speedX + accX* direction);
 		}
+		limitSpeed();
 	}
 	
 	public void accelerateY(int direction) 
 	{		
-		if( ! ((speedX*speedX) + Math.pow(speedY + accY*direction,2) > MAX_SPEED*MAX_SPEED) )
+		if( ! (Math.pow(speedX,2) + Math.pow(speedY + accY*direction,2) > Math.pow(max_speed,2)) )
 		{
 			speedY = (speedY + accY*direction);
+		}
+		limitSpeed();
+	}
+	
+	private void limitSpeed()
+	{
+		if(Math.pow(speedX,2)+Math.pow(speedY,2) > Math.pow(max_speed,2))
+		{
+			double directionX = 0;
+			
+			if((Math.abs(speedX)>= 0.0001 && Math.abs(speedY) >= 0.0001 ))
+			{
+				directionX = Math.abs(speedX) / (Math.abs(speedX) + Math.abs(speedY));
+				
+				speedX = Math.signum(speedX)*max_speed * directionX;
+				speedY = Math.signum(speedY)*max_speed * (1-directionX);
+				
+			}
 		}
 	}
 	
@@ -164,12 +201,34 @@ public class Player extends GameObject implements CircleColider
 	//TODO: Change how the attackboost works.
 	public void attackBoost() 
 	{
-		double contributionX = 0;
-		if((Math.abs(speedX)>= 0.001 && Math.abs(speedY) >= 0.001 ))
+		if(flagColision)
 		{
-			contributionX = Math.abs(speedX) / (Math.abs(speedX) + Math.abs(speedY));
-			speedX = (Math.abs(speedX)/speedX) * MAX_BOOST * contributionX;
-			speedY = (Math.abs(speedY)/speedY) * MAX_BOOST * (1-contributionX);
+			return;
+		}
+		
+		if(boostQuantity - boostCost >= 0)
+		{
+			double directionX = 0;
+			if((Math.abs(speedX)>= 0.0001 && Math.abs(speedY) >= 0.0001 ))
+			{
+				directionX = Math.abs(speedX) / (Math.abs(speedX) + Math.abs(speedY));
+				speedX = (Math.abs(speedX)/speedX) * speedBoost * directionX;
+				speedY = (Math.abs(speedY)/speedY) * speedBoost * (1-directionX);
+				
+				boostQuantity-=boostCost;
+			}
+		}
+	}
+
+	public void addBoost(int boostGain) 
+	{
+		if(boostQuantity + boostGain > boostMax)
+		{
+			boostQuantity = boostMax;
+		}
+		else
+		{
+			boostQuantity += boostGain;
 		}
 	}
 }

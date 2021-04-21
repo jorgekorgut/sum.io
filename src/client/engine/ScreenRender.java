@@ -30,26 +30,27 @@ public class ScreenRender{
 	//FIXME: try to find something better in the future.
 	private Hashtable<String,BufferedImage> imageMap = null;
 	
-	private EngineHandler callback;
-	
 	private final int TEORICAL_FPS = 60;
 	private int realFps = TEORICAL_FPS;
 	private double oldT = 0;
 	
 	private RenderThread renderThread;
+	private ImageCache imageCache;
+	private EngineHandler callback;
 	
-	
-	public ScreenRender(EngineHandler callback, BufferStrategy bufferStrategy)
+	public ScreenRender(EngineHandler callback, BufferStrategy bufferStrategy, ImageCache imageCache)
 	{
 		this.bufferStrategy = bufferStrategy;
 		
 		originX = 0;
 		originY = 0;
 		this.callback = callback;
-		renderingQueue = new PriorityBlockingQueue<GameObject>();
-		imageMap = new Hashtable<String,BufferedImage>();
+		this.imageCache = imageCache;
 		
-		loadImages();
+		renderingQueue = new PriorityBlockingQueue<GameObject>();
+		imageMap = imageCache.getImageMap();
+		
+		//loadImages();
 		
 		renderThread = new RenderThread(this, TEORICAL_FPS);
 		renderThread.start();
@@ -63,29 +64,10 @@ public class ScreenRender{
 		this.originY = y;
 	}
 	
-	private void loadImages()
-	{
-		//Find all the images names in the res folder
-		File res = new File(System.getProperty("user.dir") + System.getProperty("file.separator")+"res"+ System.getProperty("file.separator")+"images");
-		String[] imageNames = res.list();
-		try{
-			for(int i = 0;i < imageNames.length;i++)
-			{
-				//just loads image that are in png format.
-				if(imageNames[i].endsWith(".png"))
-				{
-					BufferedImage image = ImageIO.read(new File(res + System.getProperty("file.separator") + imageNames[i]));
-					imageMap.put(imageNames[i].substring(0,imageNames[i].length()-4),image);
-				}
-			}
-		} catch(Exception e) {
-			System.out.println("Error: Image did not load");
-		}	
-	}
 	
 	public void addToRender(GameObject go)
 	{
-		//Replace contains method by this explicit loop to take advantage of it and update X and Y position.
+		//Replace contains method by this explicit loop to take advantage of it and update X and Y position.		
 		for(GameObject g : renderingQueue) 
 		{	
 		if(g.equals(go)) 
@@ -101,6 +83,11 @@ public class ScreenRender{
 	
 	public void addToRender(ArrayList<GameObject> goList)
 	{
+		if(goList == null)
+		{
+			return;
+		}
+		
 		for(GameObject go : goList )
 		{
 			addToRender(go);
@@ -140,14 +127,13 @@ public class ScreenRender{
 	{
 		//TODO: Get a better way to render
 		double t1 = System.currentTimeMillis();
-		
 		do 
 		{
 			do 
 			{
 				Graphics g = bufferStrategy.getDrawGraphics();
-				windowHeight = callback.getWindow().getHeight();
-				windowWidth = callback.getWindow().getWidth();
+				windowHeight = callback.getWindow().getJFrame().getHeight();
+				windowWidth = callback.getWindow().getJFrame().getWidth();
 				
 				g.clearRect(0, 0, windowWidth, windowHeight);
 				
@@ -158,62 +144,28 @@ public class ScreenRender{
 						continue;
 					}
 					
-					BufferedImage currentImage = imageMap.get(go.getName());
-					if(currentImage == null && !go.getName().equals("null"))
+					if(!(go instanceof LabelObject))
 					{
-						currentImage = imageMap.get("noTexture");
+						drawGameObject(g,go);
 					}
 					
-					double tempPosX = 0;
-					double tempPosY = 0;
-					
-					double iX = 0;
-					double iY = 0;
-					
-					if (go.isAbsolutePath())
-					{
-						tempPosX = go.getX();
-						tempPosY = go.getY();
-						iX = tempPosX- go.getWidth()/2.0;;
-						iY = tempPosY- go.getHeight()/2.0;
-					}
-					else
-					{
-						tempPosX = go.getX() - originX;
-						tempPosY = go.getY() - originY;
-						iX = windowWidth/2.0 + tempPosX - go.getWidth()/2.0;
-						iY = windowHeight/2.0 + tempPosY - go.getHeight()/2.0;
-					}
-					
-					g.drawImage(
-							currentImage,
-							(int)iX,
-							(int)iY,
-							(int)go.getWidth(),
-							(int)go.getHeight(),
-							null);
-					
-					
-					/*
-					double scaleX = go.getWidth()/(double)currentImage.getWidth();
-					double scaleY = go.getHeight()/(double)currentImage.getHeight();
-					*/
-					/*imageInScreen(
-									g,
-									currentImage,
-									iX,
-									iY,
-									go.getWidth(),
-									go.getHeight(),
-									scaleX,
-									scaleY,
-									windowWidth,
-									windowHeight
-									);*/
+				}
+				
+				for(GameObject go: renderingQueue)
+				{
 					if(go instanceof LabelObject)
 					{
+						if(((LabelObject) go).getRatioCutted() < 1)
+						{
+							drawGameObject(g, go, ((LabelObject) go).getRatioCutted());
+						}
+						else
+						{
+							drawGameObject(g, go);
+						}
 						((LabelObject)go).draw(g);
 					}
+					
 				}
 				g.dispose();	
 			}
@@ -228,7 +180,91 @@ public class ScreenRender{
 		oldT=t1;
 	}
 	
+	private void drawGameObject(Graphics g, GameObject go)
+	{
+		double ratioCutted = 1;
+		drawGameObject(g,go,ratioCutted);
+	}
+	
+	private BufferedImage getImageCutted(GameObject go, double ratioCutted)
+	{
+		BufferedImage currentImage = imageMap.get(go.getName());
+		if(ratioCutted == 0)
+		{
+			return null;
+		}
+		if(ratioCutted == 1)
+		{
+			return currentImage;
+		}
+		
+		return cutImage(currentImage, ratioCutted);
+		
+	}
+	
+	private BufferedImage cutImage(BufferedImage currentImage,double ratioCutted)
+	{
+		currentImage = currentImage.getSubimage(0,0,(int)(currentImage.getWidth()*ratioCutted),currentImage.getHeight());
+		return currentImage;
+	}
+	
+	private void drawGameObject(Graphics g, GameObject go, double ratioCutted)
+	{
+		BufferedImage currentImage = getImageCutted(go,ratioCutted);
+		
+		if(currentImage == null && !go.getName().equals("null"))
+		{
+			currentImage = imageMap.get("noTexture");
+		}
+		
+		double tempPosX = 0;
+		double tempPosY = 0;
+		
+		double iX = 0;
+		double iY = 0;
+		
+		if (go.isAbsolutePath())
+		{
+			tempPosX = go.getX();
+			tempPosY = go.getY();
+			iX = tempPosX- go.getWidth()/2.0;
+			iY = tempPosY- go.getHeight()/2.0;
+		}
+		else
+		{
+			tempPosX = go.getX() - originX;
+			tempPosY = go.getY() - originY;
+			iX = windowWidth/2.0 + tempPosX - go.getWidth()/2.0;
+			iY = windowHeight/2.0 + tempPosY - go.getHeight()/2.0;
+		}
+		
+		g.drawImage(
+				currentImage,
+				(int)iX,
+				(int)iY,
+				(int)(go.getWidth()*ratioCutted),
+				(int)go.getHeight(),
+				null);
+	}
 	//FIXME: The implementation of rendering just what is in the screen is worst than just render everything ..., good job!
+	
+	/*
+	double scaleX = go.getWidth()/(double)currentImage.getWidth();
+	double scaleY = go.getHeight()/(double)currentImage.getHeight();
+	*/
+	/*imageInScreen(
+					g,
+					currentImage,
+					iX,
+					iY,
+					go.getWidth(),
+					go.getHeight(),
+					scaleX,
+					scaleY,
+					windowWidth,
+					windowHeight
+					);*/
+	
 	/*private void imageInScreen(Graphics g, BufferedImage currentImage,int iX,int iY, int goWidth, int goHeight,double xScale, double yScale, int wWidth, int wHeight)
 	{
 		

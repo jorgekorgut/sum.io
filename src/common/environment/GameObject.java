@@ -14,7 +14,7 @@ public class GameObject implements Comparable<GameObject>, java.io.Serializable{
 	private boolean isAbsoluteCoordinates = false;
 	
 	
-	public GameObject (String name, int x,int y, int width, int height)
+	public GameObject (String name, double x,double y, int width, int height)
 	{
 		this.name = name;
 		this.x = x;
@@ -24,7 +24,7 @@ public class GameObject implements Comparable<GameObject>, java.io.Serializable{
 		renderingPriority = 0;
 	}
 	
-	public GameObject (String name, int x,int y, int width, int height,int renderingPriority)
+	public GameObject (String name, double x,double y, int width, int height,int renderingPriority)
 	{
 		this(name,x,y,width,height);
 		this.renderingPriority = renderingPriority;
@@ -59,6 +59,12 @@ public class GameObject implements Comparable<GameObject>, java.io.Serializable{
 	{
 		if(this.renderingPriority > go.getRenderingPriority()){return 1;}
 		if(this.renderingPriority < go.getRenderingPriority()){return -1;}
+		//To let the compareTo consistent
+		if(go.equals(this))
+		{
+			return 1;
+		}
+		
 		return 0;
 	}
 	
@@ -95,6 +101,11 @@ public class GameObject implements Comparable<GameObject>, java.io.Serializable{
 	public void translate (int dx,int dy)
 	{
 		translate((double)dx,(double)dy);
+	}
+	
+	public double squareDistanceTo(GameObject obj1)
+	{
+		return Math.pow(obj1.getX() - this.getX(), 2) + Math.pow(obj1.getY() - this.getY(), 2);
 	}
 }
 

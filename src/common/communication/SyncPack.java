@@ -8,11 +8,26 @@ import common.environment.Player;
 public class SyncPack implements java.io.Serializable
 {
 	private ArrayList<Player> playerMap;
-	//private ArrayList<InteractableObject> interactableObjects;
+	private ArrayList<GameObject> interactableObjects;
 	private Player player; 
 	private Platform platform;
 	
 	private int playersCount;
+	
+	public SyncPack()
+	{
+		playerMap = new ArrayList<Player>();
+		interactableObjects = new ArrayList<GameObject>();
+	}
+	
+	public SyncPack(SyncPack sPack)
+	{
+		this.platform = sPack.getPlatform();
+		this.player = sPack.getPlayer();
+		this.playersCount = sPack.getPlayersCount();
+		this.playerMap = sPack.getPlayerMap();
+		this.interactableObjects = sPack.getInteractableObjects();
+	}
 	
 	public void setPlayersRemainingCount(int count) {this.playersCount = count;}
 	
@@ -20,11 +35,11 @@ public class SyncPack implements java.io.Serializable
 	public Player getPlayer() {return player;}
 	public Platform getPlatform() {return platform;}
 	public int getPlayersCount() {return playersCount;}
-	//public ArrayList<InteractableObject> getInteractableObjects() {return interactableObjects;}
+	public ArrayList<GameObject> getInteractableObjects() {return interactableObjects;}
 	
 	public void addPlayerMap(ArrayList<Player> playerMap)
 	{
-		this.playerMap = playerMap;//(ArrayList<Player>)playerMap.clone();
+		this.playerMap = playerMap;
 	}
 	
 	public void addPersonalPlayer(Player player)
@@ -36,12 +51,21 @@ public class SyncPack implements java.io.Serializable
 	{
 		this.platform = platform;
 	}
+
+	public void setPlayerMap(ArrayList<Player> onlyPlayerInstance) 
+	{
+		playerMap = onlyPlayerInstance;
+	}
 	
-	/*
 	public void addInteractableObject(ArrayList<GameObject> interactableObjects) 
 	{
 		this.interactableObjects = interactableObjects;
-	}*/
+	}
 
+	public void addInteractableObject(GameObject interactableObjects) 
+	{
+		this.interactableObjects.add(interactableObjects);
+	}
+	
 
 }
