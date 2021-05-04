@@ -60,12 +60,13 @@ public class GameObject implements Comparable<GameObject>, java.io.Serializable{
 		if(this.renderingPriority > go.getRenderingPriority()){return 1;}
 		if(this.renderingPriority < go.getRenderingPriority()){return -1;}
 		//To let the compareTo consistent
-		if(go.equals(this))
+		return 0;
+		/*if(go.equals(this))
 		{
 			return 0;
 		}
 		
-		return 1;
+		return 1;*/
 	}
 	
 	@Override
@@ -101,6 +102,12 @@ public class GameObject implements Comparable<GameObject>, java.io.Serializable{
 	public void translate (int dx,int dy)
 	{
 		translate((double)dx,(double)dy);
+	}
+	
+	public void translateTo(double x, double y)
+	{
+		this.x = x;
+		this.y = y;
 	}
 	
 	public double squareDistanceTo(GameObject obj1)

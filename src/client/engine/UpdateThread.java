@@ -1,22 +1,20 @@
 package client.engine;
 
-public class RenderThread extends Thread 
+public class UpdateThread extends Thread 
 {
-		private int framesPerSecond;
-		private int cleanRate;
-		private ScreenRender callback;
-		boolean quitThread = false;
+		private int updateRate;
+		private InputHandler callback;
+		private boolean quitThread;
 		
-		public RenderThread(ScreenRender callback, int framesPerSecond)
+		public UpdateThread(InputHandler callback, int updateRate)
 		{
 			this.callback = callback;
-			this.framesPerSecond = framesPerSecond;
+			this.updateRate = updateRate;
 		}
 		
-		@Override	
+		@Override
 		public void run()
 		{
-			
 			double timeFPS0 = System.currentTimeMillis();
 			
 			while(!quitThread)
@@ -24,12 +22,11 @@ public class RenderThread extends Thread
 				double time = System.currentTimeMillis();
 				double deltaTimeFPS = time - timeFPS0;
 				
-				if(deltaTimeFPS >= 1000/framesPerSecond)
+				if(deltaTimeFPS >= updateRate)
 				{
-					callback.draw();
+					callback.update();
 					timeFPS0 = time;
 				}
-				
 			}
 		}
 

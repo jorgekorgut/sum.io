@@ -6,20 +6,20 @@ import server.inteligence.PlayerBot;
 
 public class Player extends GameObject implements CircleColider
 {
-	private final int max_speed = 20;
+	private final int max_speed = 15;
 	
 	private String playerIP;
 	private int radiusColider;
 	
 	private double speedX = 0;
 	private double speedY = 0;
-	private double accX = 2.4;
-	private double accY = 2.4;
+	private double accX = 1.4;
+	private double accY = 1.4;
 	
 	private int stunTime = 500;
 	private boolean flagColision = false;
 	
-	private int speedBoost = 30;
+	private int speedBoost = 25;
 	private int boostMax = 100;
 	private int boostQuantity = boostMax;
 	private int boostCost = 3;
@@ -179,7 +179,7 @@ public class Player extends GameObject implements CircleColider
 	
 	private void limitSpeed()
 	{
-		if(Math.pow(speedX,2)+Math.pow(speedY,2) > Math.pow(max_speed,2))
+		if(Math.pow(speedX,2)+Math.pow(speedY,2) > Math.pow(max_speed,2) && !flagColision)
 		{
 			double directionX = 0;
 			

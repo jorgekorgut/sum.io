@@ -3,7 +3,10 @@ package client.engine;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Hashtable;
+import java.util.List;
 
 import common.environment.GameObject;
 
@@ -20,14 +23,13 @@ import client.engine.animation.AnimationObject;
 
 public class ScreenRender{
 	
-	private int windowWidth;
-	private int windowHeight;
+	private static int windowWidth;
+	private static int windowHeight;
 	
-	private int originX;
-	private int originY;
+	private static int originX= 0;
+	private static int originY= 0;
 	
 	private BufferStrategy bufferStrategy;
-	
 	private PriorityBlockingQueue<GameObject> renderingQueue;
 	//FIXME: try to find something better in the future.
 	private Hashtable<String,BufferedImage> imageMap = null;
@@ -40,14 +42,12 @@ public class ScreenRender{
 	private ImageCache imageCache;
 	private EngineHandler callback;
 	
-	public ScreenRender(EngineHandler callback, BufferStrategy bufferStrategy, ImageCache imageCache)
+	public ScreenRender(EngineHandler callback, BufferStrategy bufferStrategy)
 	{
 		this.bufferStrategy = bufferStrategy;
-		
-		originX = 0;
-		originY = 0;
+
 		this.callback = callback;
-		this.imageCache = imageCache;
+		this.imageCache = callback.getMainClient().getImageCache();
 		
 		renderingQueue = new PriorityBlockingQueue<GameObject>();
 		imageMap = imageCache.getImageMap();
@@ -62,8 +62,8 @@ public class ScreenRender{
 	
 	public void setOrigin(int x,int y) 
 	{
-		this.originX= x; 
-		this.originY = y;
+		ScreenRender.originX= x; 
+		ScreenRender.originY = y;
 	}
 	
 	public void addToRender(GameObject go)
@@ -79,7 +79,6 @@ public class ScreenRender{
 				return;
 			}
 		}
-		System.out.println("renderingQueue: "+ renderingQueue.size());
 		renderingQueue.add(go);
 	}
 	
@@ -127,6 +126,10 @@ public class ScreenRender{
 	
 	public void draw()
 	{
+		if(bufferStrategy == null)
+		{
+			return;
+		}
 		//TODO: Get a better way to render
 		double t1 = System.currentTimeMillis();
 		do 
@@ -134,36 +137,28 @@ public class ScreenRender{
 			do 
 			{
 				Graphics g = bufferStrategy.getDrawGraphics();
+				
 				windowHeight = callback.getWindow().getJFrame().getHeight();
 				windowWidth = callback.getWindow().getJFrame().getWidth();
 				
 				g.clearRect(0, 0, windowWidth, windowHeight);
 				
-				for(GameObject go:renderingQueue)
-				{	
+				GameObject[] renderingArray = renderingQueue.toArray(new GameObject[renderingQueue.size()]);
+				
+				Arrays.sort(renderingArray);
+				
+				for(GameObject go: renderingArray)
+				{
 					if(!go.isAwake())
 					{
 						continue;
 					}
 					
-					if(!(go instanceof LabelObject))
-					{
-						drawGameObject(g,go);
-					}
-					
-				}
-				
-				for(GameObject go: renderingQueue)
-				{
 					if(go instanceof AnimationObject)
 					{
 						((AnimationObject)go).draw(g);
 					}
-				}
-				
-				for(GameObject go: renderingQueue)
-				{
-					if(go instanceof LabelObject)
+					else if(go instanceof LabelObject)
 					{
 						if(((LabelObject) go).getRatioCutted() < 1)
 						{
@@ -173,11 +168,17 @@ public class ScreenRender{
 						{
 							drawGameObject(g, go);
 						}
+						
 						((LabelObject)go).draw(g);
 					}
-					
+					else
+					{
+						drawGameObject(g,go);
+					}
 				}
-				g.dispose();	
+				g.dispose();
+				
+				
 			}
 			while(bufferStrategy.contentsRestored());
 			
@@ -242,10 +243,15 @@ public class ScreenRender{
 		}
 		else
 		{
+			double[] coords = relativeToAbsolute(go.getX(), go.getY(), go.getWidth(), go.getHeight());
+			
+			iX = coords[0];
+			iY = coords[1];
+			/*
 			tempPosX = go.getX() - originX;
 			tempPosY = go.getY() - originY;
 			iX = windowWidth/2.0 + tempPosX - go.getWidth()/2.0;
-			iY = windowHeight/2.0 + tempPosY - go.getHeight()/2.0;
+			iY = windowHeight/2.0 + tempPosY - go.getHeight()/2.0;*/
 		}
 		
 		g.drawImage(
@@ -256,96 +262,21 @@ public class ScreenRender{
 				(int)go.getHeight(),
 				null);
 	}
-	//FIXME: The implementation of rendering just what is in the screen is worst than just render everything ..., good job!
 	
-	/*
-	double scaleX = go.getWidth()/(double)currentImage.getWidth();
-	double scaleY = go.getHeight()/(double)currentImage.getHeight();
-	*/
-	/*imageInScreen(
-					g,
-					currentImage,
-					iX,
-					iY,
-					go.getWidth(),
-					go.getHeight(),
-					scaleX,
-					scaleY,
-					windowWidth,
-					windowHeight
-					);*/
-	
-	/*private void imageInScreen(Graphics g, BufferedImage currentImage,int iX,int iY, int goWidth, int goHeight,double xScale, double yScale, int wWidth, int wHeight)
+	public static double[] relativeToAbsolute(double x,double y, int width, int height)
 	{
+		double tempPosX = x - originX;
+		double tempPosY = y - originY;
+		double iX = windowWidth/2.0 + tempPosX - width/2.0;
+		double iY = windowHeight/2.0 + tempPosY - height/2.0;
 		
-		int xCut = 0;
-		int yCut = 0;
-		int wCut = (goWidth);
-		int hCut = (goHeight);
-		
-		if(iX + goWidth < 0)
-		{
-			return;
-		}
-		
-		if(iX > wWidth)
-		{
-			return;
-		}
-		
-		if(iY + goHeight < 0)
-		{
-			return;
-		}
-		
-		if(iY > wHeight)
-		{
-			return;
-		}
-		
-		if (iX <= 0)
-		{
-			xCut = -(iX);
-			wCut = wCut - xCut;
-		}
-		
-		if (iX + goWidth > wWidth)
-		{
-			wCut = wCut - ( iX + goWidth - wWidth);
-		}
-		
-		if (iY <= 0)
-		{
-			yCut = -(iY);
-			hCut = hCut - yCut;
-		}
-		
-		if (iY + goHeight > wHeight)
-		{
-			hCut = hCut - ( iY + goHeight - wHeight);
-		}
-		
-		if(wCut > 0 && hCut > 0)
-		{
-			currentImage = currentImage.getSubimage(
-					(int)(xCut/xScale),
-					(int)(yCut/yScale),
-					(int)((wCut)/xScale),
-					(int)((hCut)/yScale)
-					);
-		}
-		else
-		{
-			return;
-		}
-		
-		g.drawImage(
-					currentImage,
-					iX + xCut,
-					iY + yCut,
-					(int)(currentImage.getWidth()*xScale),
-					(int)(currentImage.getHeight()*yScale),
-					null);
-	}*/
+		return new double[] {iX,iY};
+	}
+
+	public void killAll() 
+	{
+		renderThread.kill();
+		renderingQueue.clear();
+	}
 }
 

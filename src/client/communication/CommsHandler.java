@@ -16,7 +16,6 @@ public class CommsHandler {
 	
 	public CommsHandler(String serverIP, int serverPort, MainClient callback)
 	{
-		//FIXME: PROBLEME.
 		this.serverIP= serverIP;
 		this.serverPort = serverPort;
 		
@@ -36,11 +35,6 @@ public class CommsHandler {
 		}
 	}
 	
-	public void connectNetwork()
-	{
-		network.connect(serverIP,serverPort);
-	}
-	
 	public void receiveLobbyPack(LobbyPack lPack)
 	{
 		LobbyHandler lobbyHandler = callback.getLobbyHandler();
@@ -51,6 +45,11 @@ public class CommsHandler {
 		}
 	}
 	
+	public void connectNetwork()
+	{
+		network.connect(serverIP,serverPort);
+	}
+	
 	public void sendActionPack(ActionPack aPack)
 	{
 		network.sendActionPack(aPack);
@@ -58,7 +57,6 @@ public class CommsHandler {
 	
 	public void sendLobbyPack(LobbyPack lPack)
 	{
-
 		network.sendLobbyPack(lPack);
 	}
 }

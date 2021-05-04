@@ -1,6 +1,8 @@
 package client.lobby;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,6 +17,12 @@ import javax.swing.JPanel;
 
 import client.MainClient;
 import client.engine.ImageCache;
+import client.engine.InputHandler;
+import client.engine.KeyboardListener;
+import client.engine.ScreenRender;
+import client.engine.UserInterface;
+import client.engine.Window;
+import client.engine.animation.AnimationHandler;
 import common.communication.LobbyPack;
 
 /*
@@ -40,10 +48,10 @@ public class LobbyHandler{
 	
 	private static int botCount = 0;
 	
-	public LobbyHandler(MainClient callback, String title, int w, int h, ImageCache imageCache)
+	public LobbyHandler(MainClient callback, String title, int w, int h)
 	{
 		this.callback = callback;
-		imageMap = imageCache.getImageMap();
+		imageMap = callback.getImageCache().getImageMap();
 		
 		window = new JFrame(title);
 		lobbyPack = new LobbyPack();
@@ -57,10 +65,29 @@ public class LobbyHandler{
 		window.setVisible(true);
 	}
 	
+	public LobbyHandler(MainClient callback, JFrame jFrame)
+	{
+		this.callback = callback;
+		this.window = jFrame;
+		lobbyPack = new LobbyPack();
+		imageMap = callback.getImageCache().getImageMap();
+		
+		setupMainPanel();
+		setupPlayerPanel();
+		window.add(mainPanel);
+		
+		window.requestFocus();
+		
+		window.revalidate();
+		window.repaint();
+		
+	}
+	
 	public LobbyPack getLobbyPack() {return lobbyPack;}
 	public JFrame getJFrame(){return window;}
 	public String getPlayer() {return player;}
 	public Hashtable<String,BufferedImage> getImageMap(){return imageMap;}
+	public void setPlayer(String player) {this.player = player;}
 	
 	private void setupMainPanel()
 	{
@@ -172,5 +199,10 @@ public class LobbyHandler{
 		{
 			callback.launchGame();
 		}
+	}
+
+	public void killAll() 
+	{
+		window.remove(mainPanel);
 	}
 }

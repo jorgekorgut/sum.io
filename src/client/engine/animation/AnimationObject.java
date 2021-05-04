@@ -13,6 +13,7 @@ import javax.swing.Timer;
 
 import common.environment.GameObject;
 import common.environment.Player;
+import client.environment.EnvironmentHandler;
 
 public class AnimationObject extends GameObject
 {
@@ -23,15 +24,14 @@ public class AnimationObject extends GameObject
 	private GameObject client = null;
 	private String animationType;
 	
-	private Timer updateTimer;
 	private int updateRate;
 	private int duration = 0;
-	
-	private int time = 0;
+	private int currentTime =0;
+	private int absoluteAnimationCount = 0;
 	
 	public AnimationObject (String animationType,BufferedImage animationImage, int numberOfFrames,int tileWidth,int tileHeight)
 	{
-		super("null",0,0,tileWidth,tileHeight,1000);
+		super("null",0,0,tileWidth,tileHeight,EnvironmentHandler.PRIORITYRENDER_ANIMATION);
 		this.numberOfFrames = numberOfFrames;
 		this.animation = new BufferedImage[numberOfFrames];
 		animationImage = resizeImg(animationImage,tileWidth*numberOfFrames,tileHeight);
@@ -53,10 +53,10 @@ public class AnimationObject extends GameObject
 		this.parent = parent;
 		this.numberOfFrames = ao.getNumberOfFrames();
 		this.animationType = ao.getAnimationType();
-		this.updateTimer = ao.getUpdateTimer();
 		this.updateRate = speed;
 		this.isAwake = ao.isAwake();
-		setupUpdateTimer();
+		this.currentTime = ao.getCurrentTime();
+		
 	}
 	
 	public BufferedImage[] getAnimation() {return animation;}
@@ -64,8 +64,9 @@ public class AnimationObject extends GameObject
 	public String getAnimationType() {return animationType;}
 	public int getNumberOfFrames() {return numberOfFrames;}
 	public GameObject getClient() {return client;}
-	public void setClient(GameObject go) {this.client = go;}  
-	public Timer getUpdateTimer() {return updateTimer;}
+	public void setClient(GameObject go) {this.client = go;} 
+	public int getCurrentTime() {return currentTime;}
+	public int getUpdateRate() {return updateRate;}
 	
 	@Override
 	public boolean equals(Object o)
@@ -102,31 +103,31 @@ public class AnimationObject extends GameObject
 		this.x = x;
 		this.y = y;
 		setState(true);
-		if(!updateTimer.isRunning())
-		{
-			updateTimer.start();
-		}
+		
+		currentTime = (int) System.currentTimeMillis();
+		
+		//FIXME: Find a better way to animate
 	}
 	
-	private void setupUpdateTimer()
+	public void update()
 	{
-		updateTimer = new Timer(updateRate,
-							new ActionListener() {
-								public void actionPerformed(ActionEvent ae)
-								{
-									animationCount++;
-									if(animationCount > numberOfFrames-1)
-									{
-										animationCount =0;
-									}
-									if(time*updateRate > duration)
-									{
-										sleepObject();
-										updateTimer.stop();
-									}
-									time++;
-								}
-							});
+		int deltaTime = (int)System.currentTimeMillis()- currentTime;
+		
+		if(deltaTime > updateRate*(absoluteAnimationCount+1))
+		{
+			absoluteAnimationCount++;
+			animationCount++;
+			
+			if(animationCount >= numberOfFrames)
+			{
+				animationCount = 0;
+			}
+		}
+		
+		if(deltaTime > duration)
+		{
+			sleepObject();
+		}
 	}
 	
 	public void setParent(GameObject parent) {this.parent = parent;}
@@ -168,10 +169,4 @@ public class AnimationObject extends GameObject
 
 	    return dimg;
 	}
-
-	public void stopTimer() 
-	{
-		updateTimer.stop();
-	}
-
 }

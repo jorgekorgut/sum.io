@@ -10,19 +10,21 @@ import java.awt.image.renderable.RenderableImage;
 
 import javax.swing.JPanel;
 
+import client.lobby.LobbyHandler;
+
 public class Window{
 	
 	//FIXME: Hard coded
 	public final static int BORDER_WIDTH = 7;
 	public final static int BORDER_HEIGHT = 30;
 	
-	private EngineHandler callback;
+	private EngineHandler engHandler;
 	private JFrame window;
 	
-	public Window(EngineHandler callback, String title, int w, int h)
+	public Window(EngineHandler engHandler, String title, int w, int h)
 	{
 		window = new JFrame(title);
-		this.callback = callback;
+		this.engHandler = engHandler;
 		
 		window.setSize(w,h);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -40,12 +42,13 @@ public class Window{
 		window.createBufferStrategy(2);
 	}
 	
-	public Window(EngineHandler callback, JFrame window)
+	public Window(EngineHandler engHandler,LobbyHandler lobHandler, JFrame window)
 	{
 		this.window = window;
-		this.window.removeAll();
+		lobHandler.killAll();
+		//this.window.removeAll();
 		
-		this.callback = callback;
+		this.engHandler = engHandler;
 		
 		window.setBackground(new Color(142,203,224));
 		window.addComponentListener(new ComponentAdapter() 
@@ -59,9 +62,9 @@ public class Window{
 	
 	public void onWindowResized()
 	{
-		if(callback.getUserInterface() != null)
+		if(engHandler.getUserInterface() != null)
 		{
-			callback.getUserInterface().revalidate();
+			engHandler.getUserInterface().revalidate();
 		}
 	}
 

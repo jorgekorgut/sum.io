@@ -30,8 +30,9 @@ public class SendHandler{
 	{
 		try
 		{
+			toClient.reset();
 			toClient.writeObject(sPack);
-			toClient.reset(); // do not forget the reset, lose data from array list. Why ???
+			 // do not forget the reset, lose data from array list. Why ???
 		}
 		catch(Exception e){
 		}
@@ -41,8 +42,8 @@ public class SendHandler{
 	{
 		try
 		{
-			toClient.writeObject(lPack);
 			toClient.reset();
+			toClient.writeObject(lPack);
 		}
 		catch(Exception e){
 		}

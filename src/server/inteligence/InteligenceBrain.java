@@ -20,17 +20,18 @@ public class InteligenceBrain
 	private EnvironmentHandler callback;
 	private ArrayList<Player> playerMap;
 	
-	private Timer updateTimer;
+	private UpdateThread updateThread;
 	private int updateRate = 20;
 	
 	private static int botCount = 0;
+	
 	
 	public InteligenceBrain(EnvironmentHandler callback)
 	{
 		bots = new ArrayList<PlayerBot>();
 		this.callback = callback;
-		setupUpdateTimer();
-		updateTimer.start();
+		updateThread = new UpdateThread(this,updateRate);
+		updateThread.start();
 	}
 	
 	public EnvironmentHandler getEnvironmentHandler() {return callback;}
@@ -44,22 +45,16 @@ public class InteligenceBrain
 		botCount++;
 	}
 	
-	private void setupUpdateTimer()
-	{
-		updateTimer = new Timer(updateRate,
-							new ActionListener() {
-								public void actionPerformed(ActionEvent ae)
-								{
-									updateBotAction();
-								}
-							});
-	}
-	
-	private void updateBotAction()
+	public void updateBotAction()
 	{
 		for(PlayerBot p : bots )
 		{
 			p.updateAction();
 		}
+	}
+	
+	public void killAll()
+	{
+		updateThread.kill();
 	}
 }

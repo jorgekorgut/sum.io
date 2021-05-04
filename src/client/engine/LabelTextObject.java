@@ -22,16 +22,36 @@ public class LabelTextObject extends LabelObject
 		fontColor = new Color(14,44,83);
 	}
 	
+	public void changeColor(int red,int green, int blue)
+	{
+		fontColor = new Color(red, green, blue);
+	}
+	
+	@Override
 	public void draw(Graphics g)
 	{
 		g.setColor(fontColor);
 		
 		FontMetrics metrics = g.getFontMetrics(font);
 		
-		double newX = x - metrics.stringWidth(labelText)/2;
-		double newY = y + metrics.getHeight()/4;
+		double newX = 0;
+		double newY = 0;
+		
+		if(isAbsolutePath())
+		{
+			newX = x - metrics.stringWidth(labelText)/2;
+			newY = y + metrics.getHeight()/4;
+		}
+		else
+		{	
+			//FIXME: Problem with coordinates!
+			double[] coords = ScreenRender.relativeToAbsolute(x+width/2, y+height/2, width, height);
+			newX = (int)coords[0]- metrics.stringWidth(labelText)/2;
+			newY = (int)coords[1]+ metrics.getHeight()/4;
+		}
+		
 		g.setFont(font); 
-		g.drawString(labelText, (int)newX, (int)newY);
+		g.drawString(labelText,(int)newX,(int)newY);
 	}
 	
 	public void updateText(String s)

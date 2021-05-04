@@ -8,6 +8,10 @@ import common.communication.SyncPack;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
+/*
+ *  This class is responsible to receive the information pack from the client that it is associated. After, it directs those data for their specific handlers.
+ */
+
 public class ListeningThread extends Thread{
 	
 	private Socket socket;

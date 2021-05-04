@@ -5,9 +5,7 @@ import client.engine.EngineHandler;
 import client.engine.ImageCache;
 import client.environment.EnvironmentHandler;
 import client.lobby.LobbyHandler;
-import common.communication.ActionPack;
-import common.environment.Player;
-
+import common.communication.LobbyPack;
 import server.LaunchServer;
 
 public class MainClient 
@@ -50,19 +48,22 @@ public class MainClient
 			playerName = "loslo2";
 			onConnectServer(playerName, ip, port);
 			break;
+		case "3":
+			playerName = "loslo3";
+			onConnectServer(playerName, ip, port);
+			break;
 		}
-		/*
-		commsHandler = new CommsHandler(args[0],Integer.parseInt(args[1]),this);
-		engineHandler = new EngineHandler(this);
-		environmentHandler = new EnvironmentHandler(this);
-		*/
+		
 	}
 	
 	public EnvironmentHandler getEnvironmentHandler() {return environmentHandler;}
+	public ImageCache getImageCache() {return imageCache;}
 	public CommsHandler getCommsHandler() {return commsHandler;}
 	public EngineHandler getEngineHandler() {return engineHandler;}
 	public LobbyHandler getLobbyHandler() {return lobbyHandler;}
 	public LaunchServer getLaunchServer() {return launchServer;}
+	public void setLobbyHandler(LobbyHandler lobbyHandler) {this.lobbyHandler = lobbyHandler;}
+	
 
 	public void onCreateServer(String playerName, String ip,int port)
 	{
@@ -78,8 +79,19 @@ public class MainClient
 	public void connectPlayer(String playerName, String ip,int port)
 	{
 		commsHandler = new CommsHandler(ip,port,this);
-		lobbyHandler = new LobbyHandler(this,"sum.io",800,600,imageCache);
+		lobbyHandler = new LobbyHandler(this,"sum.io",800,600);
 		lobbyHandler.onPlayerConnectServer(playerName);
+	}
+	
+	public void returnLobby()
+	{	
+		engineHandler.killAll();
+		environmentHandler.killAll();
+		String playerName = lobbyHandler.getPlayer();
+		lobbyHandler = new LobbyHandler(this,engineHandler.getWindow().getJFrame());
+		lobbyHandler.setPlayer(playerName);
+		
+		commsHandler.sendLobbyPack(new LobbyPack());
 	}
 	
 	public void launchGame()
@@ -89,7 +101,7 @@ public class MainClient
 		{
 			launchServer.launchGame(lobbyHandler.getLobbyPack().getPlayerList());
 		}
-		engineHandler = new EngineHandler(this,lobbyHandler.getJFrame(),imageCache);
+		engineHandler = new EngineHandler(this,lobbyHandler.getJFrame());
 		environmentHandler = new EnvironmentHandler(this);
 	}
 	

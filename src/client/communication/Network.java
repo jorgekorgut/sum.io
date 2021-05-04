@@ -74,9 +74,8 @@ public class Network {
 	{
 		try 
 		{
-			//FIXME: Problem with the array that doesn't actualize when it is serialized, fixed by adding a new ActionPack that is a clone from the before.
+			//FIXME: Problem with the array that doesn't actualize when it is serialized, fixed by adding a new LobbyPack that is a clone from the before.
 			LobbyPack lobbyPack = new LobbyPack(lPack);
-			//System.out.println(lobbyPack.getPlayer());
 			objectOutput.writeObject(lobbyPack);
 		}
 		catch(IOException e)

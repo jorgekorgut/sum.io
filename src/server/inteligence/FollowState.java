@@ -55,6 +55,14 @@ public class FollowState extends AbstractFSMState
 		
 		int attackRange = 100;
 		
+		//FIXME: HardCoded
+		if(Math.pow(player.getX(),2)+Math.pow(player.getY(), 2)>Math.pow(700,2))
+		{
+			player.getFiniteStateMachine().enterState(new CentralizeState(player));
+			target = null;
+			return;
+		}
+		
 		if(player.squareDistanceTo(target) < Math.pow(attackRange, 2))
 		{
 			player.attackBoost();

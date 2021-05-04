@@ -40,4 +40,10 @@ public class FiniteStateMachine
 		currentState = nextState;
 		currentState.enterState();
 	}
+	
+	public String toString()
+	{
+		String res = currentState.getClass().getName();
+		return res;
+	}
 }

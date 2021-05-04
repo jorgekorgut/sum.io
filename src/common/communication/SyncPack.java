@@ -14,6 +14,8 @@ public class SyncPack implements java.io.Serializable
 	
 	private int playersCount;
 	
+	private String winner;
+	
 	public SyncPack()
 	{
 		playerMap = new ArrayList<Player>();
@@ -27,8 +29,11 @@ public class SyncPack implements java.io.Serializable
 		this.playersCount = sPack.getPlayersCount();
 		this.playerMap = sPack.getPlayerMap();
 		this.interactableObjects = sPack.getInteractableObjects();
+		this.setWinner(sPack.getWinner());
 	}
 	
+	public String getWinner() {return this.winner;}
+
 	public void setPlayersRemainingCount(int count) {this.playersCount = count;}
 	
 	public ArrayList<Player> getPlayerMap() {return playerMap;}
@@ -65,6 +70,11 @@ public class SyncPack implements java.io.Serializable
 	public void addInteractableObject(GameObject interactableObjects) 
 	{
 		this.interactableObjects.add(interactableObjects);
+	}
+
+	public void setWinner(String winner) 
+	{
+		this.winner = winner;
 	}
 	
 

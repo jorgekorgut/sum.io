@@ -35,6 +35,8 @@ public class CommsHandler extends Thread
 	
 	private LobbyPack lobbyPack;
 	
+	private boolean exit = false;
+	
 	public CommsHandler(int port, LaunchServer callback)
 	{
 		this.port = port;
@@ -46,6 +48,7 @@ public class CommsHandler extends Thread
 	
 	public void startUpdateTimer()
 	{
+		exit = false;
 		if(!sendUpdateTimer.isRunning())
 		{
 			sendUpdateTimer.start();
@@ -75,7 +78,7 @@ public class CommsHandler extends Thread
 			connexions = new LinkedList<ClientConnexion>();
 			sendHandler = new LinkedList<SendHandler>();
 			
-			while(true)
+			while(!exit)
 			{
 				System.out.println("Waiting for connexions ...");
 				Socket clientSocket = serverSocket.accept(); // blocked until receive something
@@ -95,6 +98,13 @@ public class CommsHandler extends Thread
 			System.out.println(e);
 			System.exit(1);
 		}
+	}
+	
+	public void kill()
+	{
+		exit = true;
+		connexions.clear();
+		sendHandler.clear();	
 	}
 	
 	public void remove(ClientConnexion cnx)
@@ -120,7 +130,6 @@ public class CommsHandler extends Thread
 	
 	public void generateSyncPack()
 	{
-		
 		if(callback.getEnvironmentHandler() == null)
 		{
 			return;

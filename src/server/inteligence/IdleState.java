@@ -26,9 +26,8 @@ public class IdleState extends AbstractFSMState
 		
 		
 		this.exitState();
-		player.getFiniteStateMachine().enterState(new CentralizeState(player));
 		
-		/*
+		
 		double squareMaxDist = Math.pow(player.getBotViewRange(), 2);
 		
 		//FIXME: HardCoded
@@ -91,7 +90,14 @@ public class IdleState extends AbstractFSMState
 		PatrolPoint patrolPoint = null;
 		if(!patrolPoints.isEmpty())
 		{
-			patrolPoint = patrolPoints.get(0);
+			int index =0;
+			patrolPoint = patrolPoints.get(index);
+			while(index < patrolPoints.size() && !patrolPoint.isAwake())
+			{
+				patrolPoint = patrolPoints.get(index);
+				index++;
+			}
+			
 		}
 		
 		if(patrolPoint != null)
@@ -101,6 +107,6 @@ public class IdleState extends AbstractFSMState
 			player.getFiniteStateMachine().enterState(sState);
 			return;
 		}
-		*/
+		
 	}
 }

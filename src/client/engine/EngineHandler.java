@@ -1,5 +1,7 @@
 package client.engine;
 
+import java.awt.Component;
+
 import javax.swing.JFrame;
 
 import client.MainClient;
@@ -15,19 +17,20 @@ public class EngineHandler {
 	private Window window;
 	private MainClient callback;
 	private UserInterface userInterface;
+	private KeyboardListener keyboardListener;
 	
-	public EngineHandler(MainClient callback, JFrame jframe, ImageCache imageCache)
+	public EngineHandler(MainClient callback, JFrame jFrame)
 	{
 		this.callback = callback;
-		this.window = new Window(this,jframe);
+		this.window = new Window(this,callback.getLobbyHandler(),jFrame);
 		
-		screenRender = new ScreenRender(this,window.getJFrame().getBufferStrategy(),imageCache);
+		screenRender = new ScreenRender(this,window.getJFrame().getBufferStrategy());
 		inputHandler = new InputHandler(this);
 		
 		//Why i need this to work properly ?
 		this.window.getJFrame().requestFocus();
-		window.getJFrame().addKeyListener(new KeyboardListener(inputHandler));
-		
+		keyboardListener = new KeyboardListener(inputHandler);
+		window.getJFrame().addKeyListener(keyboardListener);
 		this.animationHandler = new AnimationHandler(this);
 		userInterface = new UserInterface(this);
 	}
@@ -42,7 +45,15 @@ public class EngineHandler {
 	public void sendActionPack(ActionPack aPack)
 	{
 		ActionHandler.doPlayerAction(aPack);
-		callback.getEngineHandler().getScreenRender().setOrigin((int)aPack.getPlayer().getX(),(int)aPack.getPlayer().getY());
+		//callback.getEngineHandler().getScreenRender().setOrigin((int)aPack.getPlayer().getX(),(int)aPack.getPlayer().getY());
 		callback.getCommsHandler().sendActionPack(aPack);
+	}
+
+	public void killAll() 
+	{
+		window.getJFrame().removeKeyListener(keyboardListener);
+		screenRender.killAll();
+		inputHandler.killAll();
+		animationHandler.killAll();
 	}
 }

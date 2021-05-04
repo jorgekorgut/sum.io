@@ -11,7 +11,7 @@ public class LabelSliderObject extends LabelObject
 	public LabelSliderObject(ScreenRender screenRender, String background,String sliderRef, int x, int y, int width, int height) 
 	{
 		super(screenRender,background, x, y, width, height);
-		slider = new LabelObject(screenRender,sliderRef,x+3,y-3,width,height,-1000);
+		slider = new LabelObject(screenRender,sliderRef,x+3,y-3,width,height,-10);
 	}
 	
 	@Override

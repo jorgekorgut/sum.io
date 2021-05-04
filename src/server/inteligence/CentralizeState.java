@@ -24,10 +24,13 @@ public class CentralizeState extends AbstractFSMState
 		double directionX = wishPosX - player.getX();
 		double directionY = wishPosY - player.getY();
 		
-		player.moveTo(directionX,directionY);
+		if(Math.pow(player.getX(),2)+Math.pow(player.getY(), 2)<Math.pow(200, 2))
+		{
+			this.exitState();
+			player.getFiniteStateMachine().enterState(new IdleState(player));
+		}
 		
-		this.exitState();
-		player.getFiniteStateMachine().enterState(new IdleState(player));
+		player.moveTo(directionX,directionY);
 		
 	}
 

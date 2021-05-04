@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import javax.swing.Timer;
 
 import common.communication.ActionPack;
+import common.communication.LobbyPack;
 import common.communication.SyncPack;
 import common.environment.ActionHandler;
 import common.environment.CircleColider;
@@ -18,6 +19,7 @@ import common.environment.GameObject;
 import common.environment.PatrolPoint;
 import common.environment.Platform;
 import common.environment.Player;
+import common.environment.RemoveControls;
 import server.LaunchServer;
 import server.inteligence.InteligenceBrain;
 import server.inteligence.PlayerBot;
@@ -27,6 +29,10 @@ public class EnvironmentHandler
 	
 	public static final int PRIORITYRENDER_BACKGROUND = 100;
 	public static final int PRIORITYRENDER_PLAYER = 1000;
+	public static final int FINAL_TIME = 3000;
+	
+	//FIXME: Why the time is not correct ?
+	private final int DEBRIFFING_TIME = 3000;
 	
 	private final int PLATFORM_SIZE = 1600;
 	
@@ -40,20 +46,23 @@ public class EnvironmentHandler
 	
 	private SyncPack syncPack;
 	
-	private Timer updateTimer;
+	private UpdateThread updateThread;
 	private int updateRate = 20;
 	
 	private int playersRemainingCount = 0;
 	private double friction = 0.02;
 	
-	private int aparitionBoostTime = 12000; //
+	private int aparitionBoostTime = 2000; //
 	
+	private int environmentTime = 0;
 	private int boostTime = 0;
 	private int patrolTime = 0;
 	private int aparitionPatrolPoint = 200;
 	
 	//FIXME: temp
 	private static int playerNumber = 1;
+	
+	private boolean isPaused = true;
 	
 	
 	public EnvironmentHandler(LaunchServer callback)
@@ -68,9 +77,7 @@ public class EnvironmentHandler
 		inteligenceBrain = new InteligenceBrain(this);
 		
 		setupPlatform();
-		setupUpdateTimer();
-		
-		
+		updateThread = new UpdateThread(this, updateRate);
 	}
 	
 	public ArrayList<Player> getPlayerMap() {return playerMap;}
@@ -131,17 +138,6 @@ public class EnvironmentHandler
 		//callback.getEngineHandler().getScreenRender().addToRender(platform);
 		this.platform = platform;
 		syncPack.addPlatform(platform);
-	}
-	
-	private void setupUpdateTimer()
-	{
-		updateTimer = new Timer(updateRate,
-							new ActionListener() {
-								public void actionPerformed(ActionEvent ae)
-								{
-									updateEnvironment();
-								}
-							});
 	}
 	
 	private void addPatrolPoint()
@@ -292,7 +288,7 @@ public class EnvironmentHandler
 	
 	public void startEnvironnment()
 	{
-		updateTimer.start();
+		updateThread.start();
 	}
 	
 	private void onPlayerCollided(Player p1,Player p2)
@@ -312,6 +308,7 @@ public class EnvironmentHandler
 	
 	private void updateTime()
 	{
+		environmentTime++;
 		boostTime++;
 		patrolTime++;
 	}
@@ -319,11 +316,53 @@ public class EnvironmentHandler
 	//Take care to insert codes here, because this methode is called really fast
 	public void updateEnvironment()
 	{
-		colisionHanlder();
-		movementHandler();
-		addBoostHandler();
-		addPatrolPoint();
+		if(!isPaused)
+		{
+			colisionHanlder();
+			movementHandler();
+			addBoostHandler();
+			addPatrolPoint();
+		}
+		
+		if(updateRate*environmentTime >= DEBRIFFING_TIME)
+		{
+			isPaused = false;
+		}
+		
+		int playerWinTest = 0;
+		Player winner = null;
+		for(Player p : playerMap)
+		{
+			if(p.isAwake())
+			{
+				winner = p;
+				playerWinTest++;
+			}
+			
+			if(playerWinTest>1)
+			{
+				break;
+			}
+		}
+		
+		if(playerWinTest == 1)
+		{
+			isPaused = true;
+			onGameFinished(winner.getPlayerIP());
+		}
 		
 		updateTime();
+	}
+	
+	private void onGameFinished(String winner)
+	{
+		syncPack.setWinner(winner);
+		callback.killGameEnvironment();
+	}
+
+	public void kill() 
+	{
+		updateThread.kill();
+		inteligenceBrain.killAll();
 	}
 }

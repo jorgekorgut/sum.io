@@ -21,7 +21,7 @@ public class InputHandler
 	private EngineHandler callback;
 	
 	//FIXME: Find a nice updateRate, to send a ActionPack to the server. To not saturate
-	private Timer actionTimer;
+	private UpdateThread updateThread;
 	private int inputSpeedRate = 30;
 	 
 	//FIXME: Players priority render.
@@ -30,7 +30,8 @@ public class InputHandler
 		keyStatus = new boolean[NUMBER_OF_KEYS];
 		this.callback = engineHandler;
 		aPack = new ActionPack(himself);
-		setupTimer();
+		updateThread = new UpdateThread(this, inputSpeedRate);
+		updateThread.start();
 	}
 	
 	public void setPlayer(Player player)
@@ -38,16 +39,14 @@ public class InputHandler
 		this.himself = player;
 		aPack.setPlayer(player);
 	}
-	
-	private void setupTimer()
+
+	public void update() 
 	{
-		actionTimer = new Timer(inputSpeedRate,
-							new ActionListener() {
-								public void actionPerformed(ActionEvent ae)
-								{
-									sendActionPack();
-								}
-							});
+		if(aPack.isEmpty())
+		{
+			return;
+		}
+		callback.sendActionPack(aPack);
 	}
 	
 	public void onKeyPressed(int keyId)
@@ -56,8 +55,6 @@ public class InputHandler
 		{
 			keyStatus[keyId]=true;
 			updateActionPack(keyId);
-			sendActionPack();
-			actionTimer.start();
 		}
 	}
 	
@@ -67,12 +64,6 @@ public class InputHandler
 		{
 			keyStatus[keyId] = false;
 			updateActionPack(keyId);
-			sendActionPack();
-		}
-		
-		if(aPack.isEmpty())
-		{
-			actionTimer.stop();
 		}
 	}
 	
@@ -98,10 +89,10 @@ public class InputHandler
 		}
 		return aPack;
 	}
-	
-	private void sendActionPack()
+
+	public void killAll() 
 	{
-		callback.sendActionPack(aPack);
+		aPack.reset();
+		updateThread.kill();
 	}
 }
-
