@@ -53,7 +53,6 @@ public class MainClient
 			onConnectServer(playerName, ip, port);
 			break;
 		}
-		
 	}
 	
 	public EnvironmentHandler getEnvironmentHandler() {return environmentHandler;}
@@ -90,7 +89,6 @@ public class MainClient
 		String playerName = lobbyHandler.getPlayer();
 		lobbyHandler = new LobbyHandler(this,engineHandler.getWindow().getJFrame());
 		lobbyHandler.setPlayer(playerName);
-		
 		commsHandler.sendLobbyPack(new LobbyPack());
 	}
 	

@@ -130,15 +130,14 @@ public class EnvironmentHandler
 
 		interactableObjects = sPack.getInteractableObjects();
 		engineHandler.getScreenRender().addToRender(interactableObjects);
-
+	
+		updateEnvironment();	
 		
 		if(sPack.getWinner() != null)
 		{
 			onGameFinished(sPack.getWinner());
 			return;
 		}
-	
-		updateEnvironment();	
 	}
 	
 	private void onGameFinished(String winner)

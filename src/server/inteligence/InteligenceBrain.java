@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.concurrent.ArrayBlockingQueue;
 
 import javax.swing.Timer;
 
@@ -16,7 +17,7 @@ import server.environment.EnvironmentHandler;
 public class InteligenceBrain
 {
 
-	private ArrayList<PlayerBot> bots;
+	private ArrayBlockingQueue<PlayerBot> bots;
 	private EnvironmentHandler callback;
 	private ArrayList<Player> playerMap;
 	
@@ -28,14 +29,22 @@ public class InteligenceBrain
 	
 	public InteligenceBrain(EnvironmentHandler callback)
 	{
-		bots = new ArrayList<PlayerBot>();
+		bots = new ArrayBlockingQueue<PlayerBot>(12);
 		this.callback = callback;
 		updateThread = new UpdateThread(this,updateRate);
 		updateThread.start();
 	}
 	
 	public EnvironmentHandler getEnvironmentHandler() {return callback;}
-	public  ArrayList<PlayerBot> getBots(){return bots;}
+	public  ArrayList<PlayerBot> getBots()
+	{
+		ArrayList<PlayerBot> arrayTemp = new ArrayList<PlayerBot>(12);
+		for(PlayerBot p:bots)
+		{
+			arrayTemp.add(p);
+		}
+		return arrayTemp;
+	}
 	
 	public void createBot(int botX,int botY)
 	{
@@ -47,7 +56,7 @@ public class InteligenceBrain
 	
 	public void updateBotAction()
 	{
-		for(PlayerBot p : bots )
+		for(PlayerBot p : bots)
 		{
 			p.updateAction();
 		}

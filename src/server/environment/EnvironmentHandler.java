@@ -345,13 +345,14 @@ public class EnvironmentHandler
 			}
 		}
 		
+		updateTime();
+		
 		if(playerWinTest == 1)
 		{
 			isPaused = true;
 			onGameFinished(winner.getPlayerIP());
 		}
 		
-		updateTime();
 	}
 	
 	private void onGameFinished(String winner)
