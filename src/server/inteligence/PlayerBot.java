@@ -12,16 +12,14 @@ import server.environment.EnvironmentHandler;
 
 public class PlayerBot extends Player
 {
-	private static String botID = "bot";
-	
 	private ActionPack aPack;
 	private FiniteStateMachine finiteStateMachine;
 	private InteligenceBrain inteligenceBrain;
 	private int botViewRange;
 	
-	public PlayerBot(InteligenceBrain inteligenceBrain, String name, int x, int y, int width,int height, int botCount)
+	public PlayerBot(InteligenceBrain inteligenceBrain, String name, int x, int y, int width,int height)
 	{
-		super(name,x,y,width,height,botID+botCount,EnvironmentHandler.PRIORITYRENDER_PLAYER);
+		super("bot",x,y,width,height,name,EnvironmentHandler.PRIORITYRENDER_PLAYER);
 		aPack = new ActionPack(this);
 		this.inteligenceBrain = inteligenceBrain;
 		finiteStateMachine = new FiniteStateMachine(new IdleState(this));

@@ -46,9 +46,9 @@ public class InteligenceBrain
 		return arrayTemp;
 	}
 	
-	public void createBot(int botX,int botY)
+	public void createBot(int botX,int botY, String botName)
 	{
-		PlayerBot pb = new PlayerBot(this,"bot",botX,botY,50,50,botCount);
+		PlayerBot pb = new PlayerBot(this,botName,botX,botY,50,50);
 		bots.add(pb);
 		callback.connectPlayer(pb);
 		botCount++;

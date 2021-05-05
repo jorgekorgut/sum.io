@@ -63,8 +63,9 @@ public class IdleState extends AbstractFSMState
 		
 		//Searching a player
 		Player target= null;
-		for(Player p : playerMap)
+		for(int i = 0; i<playerMap.size(); i++)
 		{
+			Player p = playerMap.get(i);
 			min = 5000000;
 			//Test to search for a player that is not himself.
 			if(!player.equals(p) && p.isAwake())

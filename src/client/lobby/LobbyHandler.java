@@ -32,6 +32,7 @@ import client.engine.Window;
 import client.engine.animation.AnimationHandler;
 import client.sound.AudioMaster;
 import common.communication.LobbyPack;
+import common.environment.Player;
 
 /*
  *  LobbyHandler set up the visual support to manage the multiplayer and add bots.
@@ -48,15 +49,17 @@ public class LobbyHandler{
 	private JPanel mainPanel;
 	private ArrayList<JPanel> panelsList;
 	private String player;
+	private String playerSkin;
 	private LobbyPack lobbyPack;
 	
 	private JFrame window;
 	private Hashtable<String,BufferedImage> imageMap = null;
 	
-	private static int botCount = 0;
+	private boolean isActive = false;
 	
 	public LobbyHandler(MainClient callback, String title, int w, int h)
 	{
+		isActive = true;
 		this.callback = callback;
 		imageMap = callback.getImageCache().getImageMap();
 		
@@ -76,6 +79,7 @@ public class LobbyHandler{
 	
 	public LobbyHandler(MainClient callback, JFrame jFrame)
 	{
+		isActive = true;
 		this.callback = callback;
 		this.window = jFrame;
 		lobbyPack = new LobbyPack();
@@ -88,8 +92,7 @@ public class LobbyHandler{
 		window.revalidate();
 		window.repaint();
 		
-		callback.getAudioMaster().playSound(AudioMaster.START_MUSIC_REFERENCE,2f);
-		
+		callback.getAudioMaster().playSound(AudioMaster.START_MUSIC_REFERENCE,-1f);
 	}
 	
 	public LobbyPack getLobbyPack() {return lobbyPack;}
@@ -97,6 +100,8 @@ public class LobbyHandler{
 	public String getPlayer() {return player;}
 	public Hashtable<String,BufferedImage> getImageMap(){return imageMap;}
 	public void setPlayer(String player) {this.player = player;}
+	public void setPlayerSkin(String playerSkin) {this.playerSkin = playerSkin;}
+	public String getPlayerSkin() {return playerSkin;}
 	
 	private void setupMainPanel()
 	{
@@ -130,6 +135,11 @@ public class LobbyHandler{
 	
 	private void setupStartButton()
 	{
+		//Avoid to create StartButton If he is not the server creator.
+		if(callback.getLaunchServer() == null)
+		{
+			return;
+		}
 		LobbyPanel start = new LobbyPanel(this);
 		start.setPalet(1);
 		
@@ -177,32 +187,47 @@ public class LobbyHandler{
 		callback.getAudioMaster().playSound(AudioMaster.SELECTED_REFERENCE, -1f);
 		if(lobbyPack.getPlayerList().size()<12)
 		{
+			int botCount = 0;
+			for(String ps: lobbyPack.getPlayerList())
+			{
+				ps.startsWith(". BOT");
+				botCount++;
+			}
 			lobbyPack.addPlayer(".BOT " + botCount);
-			callback.getCommsHandler().sendLobbyPack(lobbyPack);
-			botCount++;
+			lobbyPack.addPlayerSkin("bot");
+			callback.getCommsHandler().sendPack(lobbyPack);
 		}
 	}
 	
 	public void onStart()
 	{	
 		lobbyPack.setStartFlag(true);
-		callback.getAudioMaster().stopSound(AudioMaster.START_MUSIC_REFERENCE);
-		callback.getCommsHandler().sendLobbyPack(lobbyPack);
+		callback.getCommsHandler().sendPack(lobbyPack);
 	}
 	
-	public void onPlayerConnectServer(String name)
+	public void onPlayerConnectServer(String name,String skinName)
 	{
 		this.player = name;
+		this.playerSkin = skinName;
+		System.out.println(skinName);
 		lobbyPack.addPlayer(name);
+		lobbyPack.addPlayerSkin(skinName);
 		callback.getCommsHandler().connectNetwork();
-		callback.getCommsHandler().sendLobbyPack(lobbyPack);
+		callback.getCommsHandler().sendPack(lobbyPack);
 	}
 	
 	public void syncLobby(LobbyPack lPack) 
 	{
-		String playerSkin = "devil";
+		if(!isActive)
+		{
+			callback.getAudioMaster().stopSound(AudioMaster.END_MUSIC_REFERENCE);
+			callback.getEnvironmentHandler().getFenetreGagnant().dispose();
+			callback.returnLobby();
+		}
+		
 		lobbyPack = lPack;
 		LinkedList<String> playerList = lobbyPack.getPlayerList();
+		ArrayList<String> playerSkinList = lobbyPack.getPlayerSkinList();
 		int index = 2;
 		for(String s:playerList)
 		{
@@ -214,7 +239,7 @@ public class LobbyHandler{
 			}
 			else
 			{
-				((PlayerPanel)panelsList.get(index)).setImage(imageMap.get(playerSkin));
+				((PlayerPanel)panelsList.get(index)).setImage(imageMap.get(playerSkinList.get(index-2)));
 			}
 			index++;
 		}
@@ -233,6 +258,7 @@ public class LobbyHandler{
 
 	public void killAll() 
 	{
+		isActive = false;
 		window.remove(mainPanel);
 	}
 }

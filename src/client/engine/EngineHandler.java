@@ -46,7 +46,7 @@ public class EngineHandler {
 	{
 		ActionHandler.doPlayerAction(aPack);
 		//callback.getEngineHandler().getScreenRender().setOrigin((int)aPack.getPlayer().getX(),(int)aPack.getPlayer().getY());
-		callback.getCommsHandler().sendActionPack(aPack);
+		callback.getCommsHandler().sendPack(aPack);
 	}
 
 	public void killAll() 

@@ -86,7 +86,7 @@ public class EnvironmentHandler
 	public ArrayList<GameObject> getInteractableObjects(){return interactableObjects;}
 	public LinkedList<PatrolPoint> getPatrolPoints() {return patrolPoints;}
 	
-	public void connectPlayer(String clientIP)
+	public void connectPlayer(String clientIP, String skinName)
 	{
 		int xPos = (int)( 700* Math.cos(Math.PI/6 *(playerNumber-1)));
 		int yPos = (int)( 700* Math.sin(Math.PI/6*(playerNumber-1)));
@@ -94,12 +94,12 @@ public class EnvironmentHandler
 		
 		if(clientIP.startsWith(".BOT"))
 		{
-			inteligenceBrain.createBot(xPos, yPos);
+			inteligenceBrain.createBot(xPos, yPos,clientIP);
 			return;
 		}
 		
 		Player currentPlayer = new Player(
-										"devil",
+										skinName,
 										xPos,
 										yPos,
 										50,
@@ -107,6 +107,7 @@ public class EnvironmentHandler
 										clientIP,
 										PRIORITYRENDER_PLAYER
 										);
+		
 		connectPlayer(currentPlayer);
 	}
 	
@@ -115,7 +116,9 @@ public class EnvironmentHandler
 		playerMap.add(currentPlayer);
 		syncPack.addPersonalPlayer(currentPlayer);
 		syncPack.addPlayerMap(playerMap);
-		callback.getCommsHandler().generateSyncPack();
+		
+		//callback.getCommsHandler().generateSyncPack();
+		
 		playerNumber++;
 		increasePlayersRemaining();
 	}
@@ -331,8 +334,9 @@ public class EnvironmentHandler
 		
 		int playerWinTest = 0;
 		Player winner = null;
-		for(Player p : playerMap)
+		for(int i = 0; i<playerMap.size(); i++)
 		{
+			Player p = playerMap.get(i);
 			if(p.isAwake())
 			{
 				winner = p;
@@ -347,7 +351,7 @@ public class EnvironmentHandler
 		
 		updateTime();
 		
-		if(playerWinTest == 1)
+		if(playerWinTest <= 1)
 		{
 			isPaused = true;
 			onGameFinished(winner.getPlayerIP());

@@ -30,7 +30,7 @@ public class CommsHandler extends Thread
 	private LinkedList<ClientConnexion> connexions;
 	private LinkedList<SendHandler> sendHandler;
 	
-	private Timer sendUpdateTimer;
+	private UpdateThread updateThread;
 	private int updateRate = 20;
 	
 	private LobbyPack lobbyPack;
@@ -43,33 +43,22 @@ public class CommsHandler extends Thread
 		this.callback = callback;
 		lobbyPack = new LobbyPack();
 		
-		setupTimer();
 	}
 	
 	public void startUpdateTimer()
 	{
-		exit = false;
-		if(!sendUpdateTimer.isRunning())
-		{
-			sendUpdateTimer.start();
-		}
+		updateThread = new UpdateThread(this, updateRate);
+		updateThread.start();
 	}
 	
 	public void stopUpdateTimer()
 	{
-		sendUpdateTimer.stop();
+		if(updateThread!= null)
+		{
+			updateThread.kill();
+		}
 	}
 	
-	private void setupTimer()
-	{
-		sendUpdateTimer = new Timer(updateRate,
-							new ActionListener() {
-								public void actionPerformed(ActionEvent ae)
-								{
-									generateSyncPack();
-								}
-							});
-	}
 	public void run()
 	{
 		try
@@ -88,7 +77,7 @@ public class CommsHandler extends Thread
 				System.out.println (" New connectionAccepted from:  " + clientIP);
 				
 				connexions.add(new ClientConnexion(clientSocket,clientIP,this));
-				sendHandler.add(new SendHandler(clientSocket));
+				sendHandler.add(new SendHandler(clientSocket,this));
 			
 			}
 		}
@@ -100,16 +89,13 @@ public class CommsHandler extends Thread
 		}
 	}
 	
-	public void kill()
-	{
-		exit = true;
-		connexions.clear();
-		sendHandler.clear();	
-	}
 	
 	public void remove(ClientConnexion cnx)
 	{
-		connexions.remove(cnx);
+		int index = connexions.indexOf(cnx);
+		
+		connexions.remove(index);
+		sendHandler.remove(index);
 	}
 	
 	public void sendSyncPack(SyncPack sPack)
@@ -173,6 +159,11 @@ public class CommsHandler extends Thread
 		{
 			lobbyPack.addToPlayerList(lPack.getPlayer());
 		}
+		if(lPack.getPlayerSkin() != null)
+		{
+			lobbyPack.addSkinPlayerToList(lPack.getPlayerSkin());
+		}
+		
 		lobbyPack.setStartFlag(lPack.getStartFlag());
 		sendLobbyPack(lobbyPack);
 	}

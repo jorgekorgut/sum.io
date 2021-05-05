@@ -41,6 +41,17 @@ public class Player extends GameObject implements CircleColider
 		this.flagColision = flagColision;
 	}
 
+	public Player(Player player) 
+	{
+		super(player.getName(), player.getX(), player.getY(), player.getWidth(), player.getHeight(), player.getRenderingPriority());
+		
+		this.playerIP = player.getPlayerIP();
+		this.radiusColider = player.getRadiusColider();
+		this.isAwake = player.isAwake();
+		this.boostQuantity = player.getBoostQuantity();
+		this.flagColision = player.getFlagCollision();
+	}
+
 	public String getPlayerIP() {return playerIP;}
 	public double getSpeedX() {return speedX;}
 	public double getSpeedY() {return speedY;}

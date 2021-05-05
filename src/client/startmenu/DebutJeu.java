@@ -11,6 +11,7 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.io.*;
 import java.io.IOException;
+import java.lang.reflect.Field;
 
 public class DebutJeu extends JFrame{
 	
@@ -43,6 +44,7 @@ public class DebutJeu extends JFrame{
 	private BufferedImage [] index; 
 	
 	private MainClient callback;
+	private String[] stringImages;
 	
 	public DebutJeu(MainClient callback){
 		
@@ -58,25 +60,26 @@ public class DebutJeu extends JFrame{
 		minion = callback.getImageCache().getImageMap().get("minion");
 		logo =  callback.getImageCache().getImageMap().get("SUM.IO");
 		
-this.index= new BufferedImage[]{diablo, bob, Mexicano, minion}; // creation d'un tableau d'image pour travailler avec les positions
+		this.index= new BufferedImage[]{diablo, bob, Mexicano, minion}; // creation d'un tableau d'image pour travailler avec les positions
+		stringImages = new String[] {"devil", "bob", "mexicano","minion"};
 		
 		panelImage= new JPanel (); //panel pour les images de personnages
 		panelImage.setOpaque(false);
-		personnage = new JLabel(new ImageIcon(diablo));
+		personnage = new JLabel(getScaledInstance(diablo));
 		panelImage.add(personnage);
-		
-		
 		
 		panelPseudo = new JPanel (); // panel pour le choix du pseudo
 		panelPseudo.setBackground (Color.WHITE);
 		
 		pseudo = new JLabel (" Pseudo :");  // etiquette permettant de rentrer son pseudo
+		pseudo.setFont(new Font("Verdana", Font.BOLD, 40));
 		pseudo.setBackground (new Color(255,209,53) );
 		pseudo.setOpaque(true);
 		pseudo.setHorizontalAlignment(SwingConstants.CENTER); 
 		pseudo.setVerticalAlignment(SwingConstants.CENTER); 
 		pseudo.setForeground(Color.RED);
 		rentrerPseudo = new JTextField("",10);
+		rentrerPseudo.setFont(new Font("Verdana", Font.BOLD, 40));
 		
 		gauche = new JButton ("<"); // Bouton permettant de se deplacer a gauche dans le tableau d'image
 		gauche.setBackground (new Color(255,209,53) );
@@ -107,6 +110,7 @@ this.index= new BufferedImage[]{diablo, bob, Mexicano, minion}; // creation d'un
 		bienvenue.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		creerServeur = new JButton ("Creer un Serveur !"); // Bouton pour creer le serveur
+		creerServeur.setFont(new Font("Verdana", Font.BOLD, 20));
 		creerServeur.addActionListener(new EcouteurCreerServeur(this));
 		creerServeur.setBackground (new Color(255,209,53) );
 		creerServeur.setOpaque(true);
@@ -115,6 +119,7 @@ this.index= new BufferedImage[]{diablo, bob, Mexicano, minion}; // creation d'un
 		
 		
 		connecterServeur = new JButton ("Connecter a un serveur !"); // Bouton pour creer le serveur
+		connecterServeur.setFont(new Font("Verdana", Font.BOLD, 20));
 		connecterServeur.setBackground (new Color(255,209,53) );
 		connecterServeur.addActionListener(new EcouteurConnexion1(this));
 		connecterServeur.setOpaque(true);
@@ -143,11 +148,19 @@ this.index= new BufferedImage[]{diablo, bob, Mexicano, minion}; // creation d'un
 		setVisible(true);
 	}
 		
+	private ImageIcon getScaledInstance(BufferedImage bufferedImage)
+	{
+		ImageIcon imageIcon = new ImageIcon(bufferedImage);
+		Image image = imageIcon.getImage();
+		image = image.getScaledInstance(200, 200,Image.SCALE_SMOOTH);
+		return new ImageIcon(image);
+	}
+	
 	public void deplacementDroite(){
 		if(currentImage<index.length-1){
 				currentImage++;
 		}
-			personnage.setIcon(new ImageIcon(index[currentImage]));
+			personnage.setIcon(getScaledInstance(index[currentImage]));
 			panelImage.repaint();
 			
 	lancerJeu.repaint();
@@ -158,7 +171,7 @@ this.index= new BufferedImage[]{diablo, bob, Mexicano, minion}; // creation d'un
 		if(currentImage>0){
 				currentImage--;
 		}
-		personnage.setIcon(new ImageIcon(index[currentImage]));
+		personnage.setIcon(getScaledInstance(index[currentImage]));
 		panelImage.repaint();
 			
 	lancerJeu.repaint();
@@ -166,9 +179,14 @@ this.index= new BufferedImage[]{diablo, bob, Mexicano, minion}; // creation d'un
 	
 	public void creerServeur()
 	{
+		if(rentrerPseudo.getText().equals(""))
+		{
+			System.out.println("Renter un nom valide!");
+			return;
+		}
 		kill();
 		//FIXME: HardCoded the port
-		callback.onCreateServer(rentrerPseudo.getText(),"localhost",8000);
+		callback.onCreateServer(rentrerPseudo.getText(),stringImages[currentImage],"localhost",8000);
 	}
 	
 	public void connecteeServeur(String ip)
@@ -176,7 +194,7 @@ this.index= new BufferedImage[]{diablo, bob, Mexicano, minion}; // creation d'un
 		kill();
 		String adresse = ip.substring(0, ip.length()-5);
 		int porte = Integer.parseInt( ip.substring(ip.length()-4, ip.length()));
-		callback.onConnectServer(rentrerPseudo.getText(), adresse, porte);
+		callback.onConnectServer(rentrerPseudo.getText(),stringImages[currentImage], adresse, porte);
 	}
 	
 	public void lancerOptionsConnexions()

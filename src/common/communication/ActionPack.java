@@ -18,7 +18,7 @@ public class ActionPack implements java.io.Serializable
 	public ActionPack(ActionPack aPack)
 	{
 		this.playerActionList = (LinkedList<PlayerAction>) aPack.getPlayerActionList().clone();
-		this.player = aPack.getPlayer();
+		this.player = new Player(aPack.getPlayer());
 	}
 	
 	public Player getPlayer() {return player;}

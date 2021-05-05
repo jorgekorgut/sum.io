@@ -13,15 +13,7 @@ import server.LaunchServer;
 public class MainClient 
 {
 	public static void main(String[] args) 
-	{
-		/*
-		if(args.length != 3)
-		{
-			System.out.println("Please enter the IP to the server (yours) followed by the port (if you didn't change it is 8000)");
-			System.out.println("For example: java localhost 8000");
-			return;
-		}*/
-		
+	{	
 		new MainClient();
 	}
 	/*
@@ -40,24 +32,6 @@ public class MainClient
 	{
 		imageCache = new ImageCache();
 		debutJeu = new DebutJeu(this);
-		
-		/*
-		switch(args[2])
-		{
-		case "1":
-			playerName = "loslo";
-			onCreateServer(playerName,ip,port);
-			break;
-		case "2":
-			playerName = "loslo2";
-			onConnectServer(playerName, ip, port);
-			break;
-		case "3":
-			playerName = "loslo3";
-			onConnectServer(playerName, ip, port);
-			break;
-		}
-		*/
 	}
 	
 	public EnvironmentHandler getEnvironmentHandler() {return environmentHandler;}
@@ -70,33 +44,35 @@ public class MainClient
 	public AudioMaster getAudioMaster() {return audioMaster;}
 	
 
-	public void onCreateServer(String playerName, String ip,int port)
+	public void onCreateServer(String playerName,String skinName, String ip,int port)
 	{
 		launchServer = new LaunchServer();
-		connectPlayer(playerName,ip,port);
+		connectPlayer(playerName,skinName,ip,port);
 	}
 	
-	public void onConnectServer(String playerName, String ip,int port)
+	public void onConnectServer(String playerName,String skinName, String ip,int port)
 	{
-		connectPlayer(playerName,ip,port);
+		connectPlayer(playerName,skinName,ip,port);
 	}
 	
-	public void connectPlayer(String playerName, String ip,int port)
+	public void connectPlayer(String playerName,String skinName, String ip,int port)
 	{
 		audioMaster = new AudioMaster();
 		commsHandler = new CommsHandler(ip,port,this);
 		lobbyHandler = new LobbyHandler(this,debutJeu);
-		lobbyHandler.onPlayerConnectServer(playerName);
+		
+		lobbyHandler.onPlayerConnectServer(playerName,skinName);
 	}
 	
 	public void returnLobby()
 	{	
 		engineHandler.killAll();
-		environmentHandler.killAll();
 		String playerName = lobbyHandler.getPlayer();
+		String playerSkin = lobbyHandler.getPlayerSkin();
 		lobbyHandler = new LobbyHandler(this,engineHandler.getWindow().getJFrame());
 		lobbyHandler.setPlayer(playerName);
-		commsHandler.sendLobbyPack(new LobbyPack());
+		lobbyHandler.setPlayerSkin(playerSkin);
+		commsHandler.sendPack(new LobbyPack());
 	}
 	
 	public void launchGame()
@@ -104,7 +80,7 @@ public class MainClient
 		//FIXME: Find a better way
 		if(launchServer != null)
 		{
-			launchServer.launchGame(lobbyHandler.getLobbyPack().getPlayerList());
+			launchServer.launchGame(lobbyHandler.getLobbyPack().getPlayerList(), lobbyHandler.getLobbyPack().getPlayerSkinList());
 		}
 		engineHandler = new EngineHandler(this,lobbyHandler.getJFrame());
 		environmentHandler = new EnvironmentHandler(this);

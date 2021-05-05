@@ -7,6 +7,7 @@ import common.communication.LobbyPack;
 import common.communication.SyncPack;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.StreamCorruptedException;
 
 /*
  *  This class is responsible to receive the information pack from the client that it is associated. After, it directs those data for their specific handlers.
@@ -34,13 +35,18 @@ public class ListeningThread extends Thread{
 			boolean loop = true;
 			while (loop) 
 			{
+				if(socket.isClosed())
+				{
+					System.out.println("ListeningThread: Socket closed");
+				}
+				
 				try 
 				{
 					Object objectReceived = in.readUnshared();
 					//Object objectReceived = in.readObject();
 					if(objectReceived==null)
 					{
-						loop = false;
+						//loop = false;
 					}
 					else if (objectReceived instanceof SyncPack)
 					{
@@ -55,12 +61,13 @@ public class ListeningThread extends Thread{
 				}
 				catch(ClassNotFoundException e)
 				{
+					e.printStackTrace();
 				}
 			}
 		}
 		catch(SocketException e)
 		{
-			
+			e.printStackTrace();
 		}
 		catch(IOException e)
 		{

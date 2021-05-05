@@ -1,5 +1,6 @@
 package server;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import common.communication.ActionPack;
@@ -24,13 +25,15 @@ public class LaunchServer
 	public EnvironmentHandler getEnvironmentHandler() {return environmentHandler;}
 	public CommsHandler getCommsHandler() {return commsHandler;}
 	
-	public void launchGame(LinkedList<String> playerList)
+	public void launchGame(LinkedList<String> playerList, ArrayList<String> playerSkinList)
 	{
 		environmentHandler = new EnvironmentHandler(this);
 		environmentHandler.startEnvironnment();
+		int index = 0 ;
 		for(String s : playerList)
 		{
-			environmentHandler.connectPlayer(s);
+			environmentHandler.connectPlayer(s,playerSkinList.get(index));
+			index ++;
 		}
 		commsHandler.startUpdateTimer();
 	}

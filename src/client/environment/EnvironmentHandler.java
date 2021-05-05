@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.swing.JFrame;
 import javax.swing.Timer;
 
 import client.MainClient;
@@ -16,6 +17,7 @@ import common.environment.Player;
 import client.engine.EngineHandler;
 import client.engine.LabelTextObject;
 import client.engine.ScreenRender;
+import client.engine.winwindow.FenetreGagnant;
 import client.lobby.LobbyHandler;
 import client.sound.AudioMaster;
 
@@ -38,11 +40,14 @@ public class EnvironmentHandler
 	private Player player;
 	private MainClient callback;
 	private boolean[] acienColisionState;
+	private FenetreGagnant fenetreGagnant;
+	private boolean flagWin;
 	
 	private int playersCount = 0;
 	
 	public EnvironmentHandler(MainClient callback)
 	{
+		flagWin = false;
 		playerMap = new ArrayList<Player>();
 		interactableObjects = new ArrayList<GameObject>();
 		
@@ -53,6 +58,7 @@ public class EnvironmentHandler
 	public int getRemainingPlayers(){return playersCount;}
 	public Player getPlayerClient() {return player;}
 	public ArrayList<Player> getPlayerMap(){return playerMap;}
+	public JFrame getFenetreGagnant() {return fenetreGagnant;}
 	
 	private void updateEnvironment()
 	{	
@@ -93,6 +99,7 @@ public class EnvironmentHandler
 	
 	private void onEnvironmentStart()
 	{
+		callback.getAudioMaster().stopSound(AudioMaster.START_MUSIC_REFERENCE);
 		callback.getEngineHandler().getAnimationHandler().onEnvironmentStart(player);
 	}
 	
@@ -118,10 +125,13 @@ public class EnvironmentHandler
 		if(player == null)
 		{
 			
-			for(Player p: playerMap)
+			for(int i = 0; i<playerMap.size(); i++)
 			{
+				Player p = playerMap.get(i);
+				
 				if(p.getPlayerIP().equals(callback.getLobbyHandler().getPlayer()))
 				{
+					
 					player = p;
 					callback.getEngineHandler().getInputHandler().setPlayer(p);
 					callback.getEngineHandler().getAnimationHandler().setClient(p);
@@ -133,8 +143,10 @@ public class EnvironmentHandler
 			}
 		}
 		//Update playerState.
-		for(Player p : playerMap)
+		for(int i = 0; i<playerMap.size(); i++)
 		{
+			Player p = playerMap.get(i);
+			
 			if(p.equals(player))
 			{
 				player = p;
@@ -161,10 +173,10 @@ public class EnvironmentHandler
 	
 		updateEnvironment();	
 		
-		if(sPack.getWinner() != null)
+		if(sPack.getWinner() != null && !flagWin)
 		{
+			flagWin = true;
 			onGameFinished(sPack.getWinner());
-			return;
 		}
 	}
 	
@@ -192,6 +204,7 @@ public class EnvironmentHandler
 		
 		callback.getAudioMaster().playSound(AudioMaster.END_MUSIC_REFERENCE, 1f);
 		
+
 		new Thread( new Runnable() {
 			
 			public void run()  {
@@ -203,25 +216,11 @@ public class EnvironmentHandler
 				
 				if(deltaTime >= FINAL_TIME)
 				{
-					callback.getAudioMaster().stopSound(AudioMaster.END_MUSIC_REFERENCE);
 					break;
 				}
-				
 			}
-			callback.returnLobby();
+			fenetreGagnant = new FenetreGagnant(callback, winner);
 			}
 		}).start();
-	}
-
-	public void killAll() 
-	{
-		interactableObjects.clear();
-		playerMap.clear();
-		
-		playerMap = null;
-		interactableObjects = null;
-		platform = null;
-		player = null;
-		callback = null;
 	}
 }

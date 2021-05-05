@@ -50,14 +50,10 @@ public class CommsHandler {
 		network.connect(serverIP,serverPort);
 	}
 	
-	public void sendActionPack(ActionPack aPack)
+	public void sendPack(Object aPack)
 	{
-		network.sendActionPack(aPack);
+		network.sendPack(aPack);
 	}
-	
-	public void sendLobbyPack(LobbyPack lPack)
-	{
-		network.sendLobbyPack(lPack);
-	}
+
 }
 

@@ -25,10 +25,10 @@ public class SyncPack implements java.io.Serializable
 	public SyncPack(SyncPack sPack)
 	{
 		this.platform = sPack.getPlatform();
-		this.player = sPack.getPlayer();
+		this.player = new Player(sPack.getPlayer());
 		this.playersCount = sPack.getPlayersCount();
-		this.playerMap = sPack.getPlayerMap();
-		this.interactableObjects = sPack.getInteractableObjects();
+		this.playerMap = (ArrayList<Player>) sPack.getPlayerMap().clone();
+		this.interactableObjects = (ArrayList<GameObject>) sPack.getInteractableObjects().clone();
 		this.setWinner(sPack.getWinner());
 	}
 	

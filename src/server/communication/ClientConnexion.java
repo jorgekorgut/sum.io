@@ -5,6 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.LinkedList;
 
 import common.communication.ActionPack;
 import common.communication.LobbyPack;
@@ -16,8 +17,6 @@ public class ClientConnexion extends Thread
 	private CommsHandler callback;
 	private ObjectInputStream fromClient;
 	private String clientIP;
-	
-	private ObjectOutputStream toClient;
 
 	public ClientConnexion(Socket socket, String clientIP, CommsHandler callback)
 	{
@@ -40,7 +39,7 @@ public class ClientConnexion extends Thread
 				Object o = fromClient.readObject();
 				if(o== null)
 				{
-					loop = false;
+					//loop = false;
 				}
 				else if(o instanceof ActionPack)
 				{
@@ -79,7 +78,7 @@ public class ClientConnexion extends Thread
 		}
 		catch(Exception e)
 		{
-			
+			e.printStackTrace();
 		}
 	}
 	private void lobbyPackReceived(LobbyPack lPack)

@@ -8,6 +8,7 @@ import java.net.UnknownHostException;
 import client.engine.InputHandler;
 import common.communication.ActionPack;
 import common.communication.LobbyPack;
+import common.communication.SyncPack;
 
 public class Network {
 
@@ -42,20 +43,6 @@ public class Network {
 		 }
 	}
 	
-	public void sendActionPack(ActionPack aPack)
-	{
-		try 
-		{
-			//FIXME: Problem with the array that doesn't actualize when it is serialized, fixed by adding a new ActionPack that is a clone from the before.
-			ActionPack actionPack = new ActionPack(aPack);
-			objectOutput.writeObject(actionPack);
-		}
-		catch(IOException e)
-		{
-			close();
-		}
-	}
-	
 	public void close()
 	{
 		try
@@ -70,16 +57,39 @@ public class Network {
 		}
 	}
 
-	public void sendLobbyPack(LobbyPack lPack) 
+	public void sendPack(Object pack) 
 	{
+		if(socket.isClosed())
+		{
+			System.out.println("NetWork: Socket is closed");
+			return;
+		}
+		
+		if(pack instanceof LobbyPack)
+		{
+			pack = new LobbyPack((LobbyPack)pack);
+		}
+		if(pack instanceof SyncPack)
+		{
+			pack = new SyncPack((SyncPack)pack);
+		}
+		if(pack instanceof ActionPack)
+		{
+			pack = new ActionPack((ActionPack)pack);
+		}
+		
 		try 
 		{
 			//FIXME: Problem with the array that doesn't actualize when it is serialized, fixed by adding a new LobbyPack that is a clone from the before.
-			LobbyPack lobbyPack = new LobbyPack(lPack);
-			objectOutput.writeObject(lobbyPack);
+			if(pack != null)
+			{
+				objectOutput.writeUnshared(pack);
+			}
+			
 		}
 		catch(IOException e)
 		{
+			e.printStackTrace();
 			close();
 		}
 	}
