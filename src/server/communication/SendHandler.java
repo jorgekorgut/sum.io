@@ -25,12 +25,26 @@ public class SendHandler{
 		}
 	}
 	
+	public void sendToClient(Object obj)
+	{
+		try
+		{
+			toClient.reset();
+			toClient.writeObject(obj);
+			 // do not forget the reset, lose data from array list. Why ???
+		}
+		catch(Exception e){
+		}
+	}
+	
+	/*
 	//TODO: Some updates to the client in a determinated time.
 	public void sendSyncPack(SyncPack sPack)
 	{
 		try
 		{
 			toClient.reset();
+			//toClient = new ObjectOutputStream(socket.getOutputStream());
 			toClient.writeObject(sPack);
 			 // do not forget the reset, lose data from array list. Why ???
 		}
@@ -43,11 +57,13 @@ public class SendHandler{
 		try
 		{
 			toClient.reset();
+			//toClient = new ObjectOutputStream(socket.getOutputStream());
 			toClient.writeObject(lPack);
 		}
 		catch(Exception e){
 		}
 	}
+	*/
 	
 	public void close()
 	{

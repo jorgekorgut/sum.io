@@ -116,7 +116,7 @@ public class CommsHandler extends Thread
 	{
 		for(SendHandler sHandler : sendHandler)
 		{
-			sHandler.sendSyncPack(sPack);
+			sHandler.sendToClient(sPack);
 		}
 	}
 	
@@ -124,7 +124,7 @@ public class CommsHandler extends Thread
 	{
 		for(SendHandler sHandler : sendHandler)
 		{
-			sHandler.sendLobbyPack(lPack);
+			sHandler.sendToClient(lPack);
 		}
 	}
 	

@@ -36,7 +36,8 @@ public class ListeningThread extends Thread{
 			{
 				try 
 				{
-					Object objectReceived = in.readObject();
+					Object objectReceived = in.readUnshared();
+					//Object objectReceived = in.readObject();
 					if(objectReceived==null)
 					{
 						loop = false;

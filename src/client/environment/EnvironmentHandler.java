@@ -17,6 +17,7 @@ import client.engine.EngineHandler;
 import client.engine.LabelTextObject;
 import client.engine.ScreenRender;
 import client.lobby.LobbyHandler;
+import client.sound.AudioMaster;
 
 /*
  * This class is responsible to receive the SyncPack and update the client conditions.
@@ -36,6 +37,7 @@ public class EnvironmentHandler
 	private Platform platform;
 	private Player player;
 	private MainClient callback;
+	private boolean[] acienColisionState;
 	
 	private int playersCount = 0;
 	
@@ -43,6 +45,8 @@ public class EnvironmentHandler
 	{
 		playerMap = new ArrayList<Player>();
 		interactableObjects = new ArrayList<GameObject>();
+		
+		acienColisionState = new boolean[12];
 		this.callback = callback;
 	}
 
@@ -52,12 +56,36 @@ public class EnvironmentHandler
 	
 	private void updateEnvironment()
 	{	
-		for(Player p: playerMap)
+		for(int i =0; i< playerMap.size(); i++)
 		{
-			if(p.isAwake() && p.getFlagCollision())
+			Player p = playerMap.get(i);
+			if(!p.isAwake())
 			{
-				callback.getEngineHandler().getAnimationHandler().onColision(p,player);
+				continue;
 			}
+			if(p.getFlagCollision())
+			{
+				if(!acienColisionState[i])
+				{
+					callback.getEngineHandler().getAnimationHandler().onColision(p,player);
+					
+					double distance = Math.sqrt(p.squareDistanceTo(player));
+					
+					double volume = AudioMaster.MUTE_VALUE;
+					
+					if(distance >= 0 && distance < AudioMaster.HEAR_RANGE)
+					{
+						volume =  (distance/AudioMaster.HEAR_RANGE) * AudioMaster.MUTE_VALUE;	
+					}
+					callback.getAudioMaster().playSound("collision",(float)volume);
+					acienColisionState[i] = true;
+				}
+			}
+			else
+			{
+				acienColisionState[i] = false;
+			}
+			
 		}
 		callback.getEngineHandler().getAnimationHandler().update();
 		callback.getEngineHandler().getUserInterface().update();
@@ -162,6 +190,8 @@ public class EnvironmentHandler
 		callback.getEngineHandler().getScreenRender().addToRender(win);
 		callback.getEngineHandler().getAnimationHandler().onGameFinished();
 		
+		callback.getAudioMaster().playSound(AudioMaster.END_MUSIC_REFERENCE, 1f);
+		
 		new Thread( new Runnable() {
 			
 			public void run()  {
@@ -173,6 +203,7 @@ public class EnvironmentHandler
 				
 				if(deltaTime >= FINAL_TIME)
 				{
+					callback.getAudioMaster().stopSound(AudioMaster.END_MUSIC_REFERENCE);
 					break;
 				}
 				

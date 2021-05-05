@@ -5,6 +5,8 @@ import client.engine.EngineHandler;
 import client.engine.ImageCache;
 import client.environment.EnvironmentHandler;
 import client.lobby.LobbyHandler;
+import client.sound.AudioMaster;
+import client.startmenu.DebutJeu;
 import common.communication.LobbyPack;
 import server.LaunchServer;
 
@@ -12,13 +14,15 @@ public class MainClient
 {
 	public static void main(String[] args) 
 	{
+		/*
 		if(args.length != 3)
 		{
 			System.out.println("Please enter the IP to the server (yours) followed by the port (if you didn't change it is 8000)");
 			System.out.println("For example: java localhost 8000");
 			return;
-		}
-		new MainClient(args);
+		}*/
+		
+		new MainClient();
 	}
 	/*
 	 * ATRIBUTS
@@ -29,15 +33,15 @@ public class MainClient
 	private LobbyHandler lobbyHandler;
 	private LaunchServer launchServer;
 	private ImageCache imageCache;
+	private AudioMaster audioMaster;
+	private DebutJeu debutJeu;
 	
-	public MainClient(String[] args)
+	public MainClient()
 	{
 		imageCache = new ImageCache();
-		String ip = args[0];
-		int port = Integer.parseInt(args[1]);
+		debutJeu = new DebutJeu(this);
 		
-		//FIXME: HardCoded
-		String playerName;
+		/*
 		switch(args[2])
 		{
 		case "1":
@@ -53,6 +57,7 @@ public class MainClient
 			onConnectServer(playerName, ip, port);
 			break;
 		}
+		*/
 	}
 	
 	public EnvironmentHandler getEnvironmentHandler() {return environmentHandler;}
@@ -62,6 +67,7 @@ public class MainClient
 	public LobbyHandler getLobbyHandler() {return lobbyHandler;}
 	public LaunchServer getLaunchServer() {return launchServer;}
 	public void setLobbyHandler(LobbyHandler lobbyHandler) {this.lobbyHandler = lobbyHandler;}
+	public AudioMaster getAudioMaster() {return audioMaster;}
 	
 
 	public void onCreateServer(String playerName, String ip,int port)
@@ -77,8 +83,9 @@ public class MainClient
 	
 	public void connectPlayer(String playerName, String ip,int port)
 	{
+		audioMaster = new AudioMaster();
 		commsHandler = new CommsHandler(ip,port,this);
-		lobbyHandler = new LobbyHandler(this,"sum.io",800,600);
+		lobbyHandler = new LobbyHandler(this,debutJeu);
 		lobbyHandler.onPlayerConnectServer(playerName);
 	}
 	

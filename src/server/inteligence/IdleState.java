@@ -26,8 +26,6 @@ public class IdleState extends AbstractFSMState
 		
 		
 		this.exitState();
-		
-		
 		double squareMaxDist = Math.pow(player.getBotViewRange(), 2);
 		
 		//FIXME: HardCoded
@@ -38,8 +36,10 @@ public class IdleState extends AbstractFSMState
 			GameObject boost = null;
 			min = 5000000;
 			
-			for(GameObject g : interactableObjects)
+			//Changed to normal for due to ConcurrentModificationException
+			for(int i = 0 ; i< interactableObjects.size(); i++)
 				{
+					GameObject g = interactableObjects.get(i);
 					//Test to search for a player that is not himself.
 					if(!player.equals(g) && g.isAwake())
 					{

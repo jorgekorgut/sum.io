@@ -6,6 +6,13 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -23,6 +30,7 @@ import client.engine.ScreenRender;
 import client.engine.UserInterface;
 import client.engine.Window;
 import client.engine.animation.AnimationHandler;
+import client.sound.AudioMaster;
 import common.communication.LobbyPack;
 
 /*
@@ -45,7 +53,6 @@ public class LobbyHandler{
 	private JFrame window;
 	private Hashtable<String,BufferedImage> imageMap = null;
 	
-	
 	private static int botCount = 0;
 	
 	public LobbyHandler(MainClient callback, String title, int w, int h)
@@ -63,6 +70,8 @@ public class LobbyHandler{
 		setupPlayerPanel();
 		window.add(mainPanel);
 		window.setVisible(true);
+		
+		callback.getAudioMaster().playSound(AudioMaster.START_MUSIC_REFERENCE,2f);
 	}
 	
 	public LobbyHandler(MainClient callback, JFrame jFrame)
@@ -75,11 +84,11 @@ public class LobbyHandler{
 		setupMainPanel();
 		setupPlayerPanel();
 		window.add(mainPanel);
-		
 		window.requestFocus();
-		
 		window.revalidate();
 		window.repaint();
+		
+		callback.getAudioMaster().playSound(AudioMaster.START_MUSIC_REFERENCE,2f);
 		
 	}
 	
@@ -128,14 +137,33 @@ public class LobbyHandler{
 		startBt.setFont(LobbyPanel.FONT);
 		startBt.setContentAreaFilled(false);
 		//startBt.setBorderPainted(false);
-		startBt.addActionListener(new ActionListener() 
-									{
-										@Override
-										public void actionPerformed(ActionEvent e) 
+		
+		//AddSounds
+		startBt.addMouseListener(new MouseListener() 
 										{
-											onStart();
+											@Override
+											public void mouseClicked(MouseEvent e) {
+												onStart();
+											}
+	
+											@Override
+											public void mousePressed(MouseEvent e) {}
+	
+											@Override
+											public void mouseReleased(MouseEvent e) {}
+	
+											@Override
+											public void mouseEntered(MouseEvent e) 
+											{
+												
+											}
+	
+											@Override
+											public void mouseExited(MouseEvent e) 
+											{
+												
+											}
 										}
-									}
 								 );
 		
 		start.add(startBt);
@@ -146,6 +174,7 @@ public class LobbyHandler{
 	
 	public void addBotToLobby()
 	{
+		callback.getAudioMaster().playSound(AudioMaster.SELECTED_REFERENCE, -1f);
 		if(lobbyPack.getPlayerList().size()<12)
 		{
 			lobbyPack.addPlayer(".BOT " + botCount);
@@ -157,6 +186,7 @@ public class LobbyHandler{
 	public void onStart()
 	{	
 		lobbyPack.setStartFlag(true);
+		callback.getAudioMaster().stopSound(AudioMaster.START_MUSIC_REFERENCE);
 		callback.getCommsHandler().sendLobbyPack(lobbyPack);
 	}
 	
