@@ -21,6 +21,10 @@ import javax.swing.ViewportLayout;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
+/*
+ * This class creates the personalized panels in the lobby screen.
+ */
+
 public class LobbyPanel extends JPanel
 {
 	

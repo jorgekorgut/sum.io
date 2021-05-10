@@ -15,6 +15,15 @@ import common.environment.GameObject;
 import common.environment.Player;
 import client.environment.EnvironmentHandler;
 
+/*
+ * This class is the GameObject that represents the animation. 
+ * In parameter it receive:
+ * 		- The imageTile name (The same in the res folder)
+ * 		- The animationImage
+ * 		- The number of frames to cut the image
+ * 		- The dimensions that will be displayed in the screen
+ */
+
 public class AnimationObject extends GameObject
 {
 	private BufferedImage[] animation;
@@ -67,6 +76,8 @@ public class AnimationObject extends GameObject
 	public void setClient(GameObject go) {this.client = go;} 
 	public int getCurrentTime() {return currentTime;}
 	public int getUpdateRate() {return updateRate;}
+	public void setParent(GameObject parent) {this.parent = parent;}
+
 	
 	@Override
 	public boolean equals(Object o)
@@ -105,8 +116,6 @@ public class AnimationObject extends GameObject
 		setState(true);
 		
 		currentTime = (int) System.currentTimeMillis();
-		
-		//FIXME: Find a better way to animate
 	}
 	
 	public void update()
@@ -129,9 +138,6 @@ public class AnimationObject extends GameObject
 			sleepObject();
 		}
 	}
-	
-	public void setParent(GameObject parent) {this.parent = parent;}
-	
 	
 	public void draw(Graphics g)
 	{	

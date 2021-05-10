@@ -14,6 +14,12 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+/*
+ * This class creates one single player panel that includes:
+ * 		- An image of the skin
+ * 		- A name of the player
+ * 		- A button to add a bot
+ */
 
 public class PlayerPanel extends LobbyPanel
 {
@@ -60,13 +66,6 @@ public class PlayerPanel extends LobbyPanel
 		addButton.setDisabledIcon(new ImageIcon( callback.getImageMap().get("add1").getScaledInstance(50, 50, 1)));
 		
 		buttons.add(addButton);
-		
-		
-	}
-	
-	public void addBot()
-	{
-		callback.addBotToLobby();
 	}
 	
 	private void setupImages()
@@ -75,7 +74,6 @@ public class PlayerPanel extends LobbyPanel
 		
 		image = new JLabel();
 		imageContainer.setBorder(new EmptyBorder(BORDER_SIZE-15,BORDER_SIZE-15,BORDER_SIZE+15,BORDER_SIZE+15));
-		
 		imageContainer.setOpaque(false);
 		imageContainer.add(image);
 	}
@@ -91,6 +89,11 @@ public class PlayerPanel extends LobbyPanel
 		informations.add(name,BorderLayout.CENTER);
 	}
 	
+	public void addBot()
+	{
+		callback.addBotToLobby();
+	}
+	
 	public void setName(String value)
 	{
 		name.setText(value);
@@ -101,6 +104,11 @@ public class PlayerPanel extends LobbyPanel
 		addButton.setEnabled(false);
 	}
 	
+	public void enableButton() 
+	{
+		addButton.setEnabled(true);
+	}
+	
 	public void setImage(BufferedImage bi)
 	{
 		if(bi != null)
@@ -108,10 +116,4 @@ public class PlayerPanel extends LobbyPanel
 			image.setIcon(new ImageIcon(bi.getScaledInstance(100, 100, 1)));
 		}
 	}
-
-	public void enableButton() 
-	{
-		addButton.setEnabled(true);
-	}
-
 }

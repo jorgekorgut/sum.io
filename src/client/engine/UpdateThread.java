@@ -1,5 +1,9 @@
 package client.engine;
 
+/*
+ * This thread is responsible to send the input from the client in a constant rate to the server.
+ */
+
 public class UpdateThread extends Thread 
 {
 		private int updateRate;
@@ -8,6 +12,7 @@ public class UpdateThread extends Thread
 		
 		public UpdateThread(InputHandler callback, int updateRate)
 		{
+			Thread.currentThread().setName("SendingInputThread");
 			this.callback = callback;
 			this.updateRate = updateRate;
 		}
@@ -15,17 +20,17 @@ public class UpdateThread extends Thread
 		@Override
 		public void run()
 		{
-			double timeFPS0 = System.currentTimeMillis();
+			double time0 = System.currentTimeMillis();
 			
 			while(!quitThread)
 			{
 				double time = System.currentTimeMillis();
-				double deltaTimeFPS = time - timeFPS0;
+				double deltaTime = time - time0;
 				
-				if(deltaTimeFPS >= updateRate)
+				if(deltaTime >= updateRate)
 				{
-					callback.update();
-					timeFPS0 = time;
+					callback.sendActionPack();
+					time0 = time;
 				}
 			}
 		}

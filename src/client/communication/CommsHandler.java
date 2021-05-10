@@ -7,6 +7,10 @@ import common.communication.SyncPack;
 import common.communication.ActionPack;
 import common.communication.LobbyPack;
 
+/*
+ * This class is responsible to create a Network and controls information flux received and sent
+ */
+
 public class CommsHandler {
 	
 	private String serverIP;
@@ -18,8 +22,9 @@ public class CommsHandler {
 	{
 		this.serverIP= serverIP;
 		this.serverPort = serverPort;
-		
 		this.callback = callback;
+		
+		//TODO: Visual to this information
 		System.out.println("Connecting to: "+ serverIP + ":" + serverPort);
 		network = new Network(this);
 	}
@@ -50,10 +55,9 @@ public class CommsHandler {
 		network.connect(serverIP,serverPort);
 	}
 	
-	public void sendPack(Object aPack)
+	public void sendPack(Object pack)
 	{
-		network.sendPack(aPack);
+		network.sendPack(pack);
 	}
-
 }
 

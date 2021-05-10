@@ -34,12 +34,12 @@ public class EnvironmentHandler
 	
 	public static final int FINAL_TIME = 3000;
 	
+	private MainClient callback;
 	private ArrayList<Player> playerMap;
 	private ArrayList<GameObject> interactableObjects;
 	private Platform platform;
 	private Player player;
-	private MainClient callback;
-	private boolean[] acienColisionState;
+	private boolean[] acienCollisionState;
 	private FenetreGagnant fenetreGagnant;
 	private boolean flagWin;
 	
@@ -51,7 +51,7 @@ public class EnvironmentHandler
 		playerMap = new ArrayList<Player>();
 		interactableObjects = new ArrayList<GameObject>();
 		
-		acienColisionState = new boolean[12];
+		acienCollisionState = new boolean[12];
 		this.callback = callback;
 	}
 
@@ -71,9 +71,9 @@ public class EnvironmentHandler
 			}
 			if(p.getFlagCollision())
 			{
-				if(!acienColisionState[i])
+				if(!acienCollisionState[i])
 				{
-					callback.getEngineHandler().getAnimationHandler().onColision(p,player);
+					callback.getEngineHandler().getAnimationHandler().onCollision(p,player);
 					
 					double distance = Math.sqrt(p.squareDistanceTo(player));
 					
@@ -84,23 +84,17 @@ public class EnvironmentHandler
 						volume =  (distance/AudioMaster.HEAR_RANGE) * AudioMaster.MUTE_VALUE;	
 					}
 					callback.getAudioMaster().playSound("collision",(float)volume);
-					acienColisionState[i] = true;
+					acienCollisionState[i] = true;
 				}
 			}
 			else
 			{
-				acienColisionState[i] = false;
+				acienCollisionState[i] = false;
 			}
 			
 		}
 		callback.getEngineHandler().getAnimationHandler().update();
 		callback.getEngineHandler().getUserInterface().update();
-	}
-	
-	private void onEnvironmentStart()
-	{
-		callback.getAudioMaster().stopSound(AudioMaster.START_MUSIC_REFERENCE);
-		callback.getEngineHandler().getAnimationHandler().onEnvironmentStart(player);
 	}
 	
 	public void syncClient(SyncPack sPack)
@@ -178,6 +172,12 @@ public class EnvironmentHandler
 			flagWin = true;
 			onGameFinished(sPack.getWinner());
 		}
+	}
+	
+	private void onEnvironmentStart()
+	{
+		callback.getAudioMaster().stopSound(AudioMaster.START_MUSIC_REFERENCE);
+		callback.getEngineHandler().getAnimationHandler().onEnvironmentStart(player);
 	}
 	
 	private void onGameFinished(String winner)

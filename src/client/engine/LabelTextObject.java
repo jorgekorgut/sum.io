@@ -5,9 +5,12 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 
+/*
+ * This class generates a text centralized in the LabelObject
+ */
+
 public class LabelTextObject extends LabelObject
 {
-	
 	private String labelText;
 	private int fontSize;
 	private Font font;
@@ -54,9 +57,8 @@ public class LabelTextObject extends LabelObject
 		g.drawString(labelText,(int)newX,(int)newY);
 	}
 	
-	public void updateText(String s)
+	public void updateText(String text)
 	{
-		labelText = s;
+		labelText = text;
 	}
-
 }

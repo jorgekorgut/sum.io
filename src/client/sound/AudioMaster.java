@@ -28,6 +28,13 @@ public class AudioMaster {
 	private float soundVolume;
 	private Hashtable<String,Clip> audioMap = null;
 	
+	public AudioMaster (){
+		audioMap = new Hashtable<String,Clip>();
+		musicVolume = 0;
+		soundVolume = 0;
+		loadAudio();
+	}
+	
 	public float getMusicVolume() {
 		return musicVolume;
 	}
@@ -44,28 +51,8 @@ public class AudioMaster {
 		this.soundVolume = soundVolume;
 	}
 	
-	public AudioMaster (){
-		audioMap = new Hashtable<String,Clip>();
-		musicVolume = 0;
-		soundVolume = 0;
-		loadAudio();
-	}
-	
-	//For the sound effects 
-	//FIXME: It is not the best way to do it, but it works.
-	public void playSound(String name,float volume) {
-		
-		Clip clip = audioMap.get(name);
-		clip.stop();
-		clip.setMicrosecondPosition(0);
-		
-		FloatControl volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-		volumeControl.setValue(volume);
-		clip.setMicrosecondPosition(0);
-		clip.start();
-	}
-	
-	public void loadAudio()
+	//FIXME: Problem: The thread of the music is running without really need.
+	private void loadAudio()
 	{
 		File res = new File(System.getProperty("user.dir") + System.getProperty("file.separator")+"res"+ System.getProperty("file.separator")+"sounds");
 		String[] audioNames = res.list();
@@ -82,7 +69,7 @@ public class AudioMaster {
 				FloatControl volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
 				
 				clip.start();
-				volume.setValue(-80f);
+				volume.setValue(MUTE_VALUE);
 				clip.setFramePosition(0);
 				clip.flush();
 				audioMap.put(audioNames[i].substring(0,audioNames[i].length()-4), clip);
@@ -94,6 +81,20 @@ public class AudioMaster {
 		} catch (LineUnavailableException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	//For the sound effects 
+	//FIXME: It is not the best way to do it, but it works.
+	public void playSound(String name,float volume) {
+		
+		Clip clip = audioMap.get(name);
+		clip.stop();
+		clip.setMicrosecondPosition(0);
+		
+		FloatControl volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+		volumeControl.setValue(volume);
+		clip.setMicrosecondPosition(0);
+		clip.start();
 	}
 	
 	public void stopSound(String name)

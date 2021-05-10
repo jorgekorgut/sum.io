@@ -10,21 +10,24 @@ import common.communication.ActionPack;
 import common.communication.PlayerAction;
 import common.environment.Player;
 
+/*
+ * This class is responsible to manage different inputs of the client,
+ * Notice that the complex way implemented was to provide a base to other kind of players inputs.
+ * For example, double space bar to teletransport ...
+ */
+
 public class InputHandler
 {
-	private static int NUMBER_OF_KEYS = 500;
-	
-	private boolean[] keyStatus;
-	
-	private Player himself;
-	private ActionPack aPack;
 	private EngineHandler callback;
 	
-	//FIXME: Find a nice updateRate, to send a ActionPack to the server. To not saturate
+	private static int NUMBER_OF_KEYS = 500;
+	private boolean[] keyStatus;
+	private Player himself;
+	private ActionPack aPack;
+
 	private UpdateThread updateThread;
 	private int inputSpeedRate = 30;
 	 
-	//FIXME: Players priority render.
 	public InputHandler (EngineHandler engineHandler)
 	{
 		keyStatus = new boolean[NUMBER_OF_KEYS];
@@ -39,8 +42,8 @@ public class InputHandler
 		this.himself = player;
 		aPack.setPlayer(player);
 	}
-
-	public void update() 
+	
+	public void sendActionPack() 
 	{
 		if(aPack.isEmpty())
 		{

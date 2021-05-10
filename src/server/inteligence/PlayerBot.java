@@ -1,7 +1,5 @@
 package server.inteligence;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 import common.communication.ActionPack;
@@ -14,14 +12,14 @@ public class PlayerBot extends Player
 {
 	private ActionPack aPack;
 	private FiniteStateMachine finiteStateMachine;
-	private InteligenceBrain inteligenceBrain;
+	private InteligenceHandler inteligenceHandler;
 	private int botViewRange;
 	
-	public PlayerBot(InteligenceBrain inteligenceBrain, String name, int x, int y, int width,int height)
+	public PlayerBot(InteligenceHandler inteligenceHandler, String name, int x, int y, int width,int height)
 	{
 		super("bot",x,y,width,height,name,EnvironmentHandler.PRIORITYRENDER_PLAYER);
 		aPack = new ActionPack(this);
-		this.inteligenceBrain = inteligenceBrain;
+		this.inteligenceHandler = inteligenceHandler;
 		finiteStateMachine = new FiniteStateMachine(new IdleState(this));
 		
 		botViewRange = (int) (Math.random()*200 + 400); // min 400 max 600
@@ -31,7 +29,7 @@ public class PlayerBot extends Player
 	public ActionPack getActionPack() {return aPack;}
 	public void setActionPack(ActionPack aPack) {this.aPack = aPack;}
 	public FiniteStateMachine getFiniteStateMachine() {return finiteStateMachine;}
-	public InteligenceBrain getInteligenceBrain() {return inteligenceBrain;}
+	public InteligenceHandler getInteligenceHandler() {return inteligenceHandler;}
 
 	public void updateAction()
 	{

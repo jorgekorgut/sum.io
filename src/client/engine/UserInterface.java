@@ -22,8 +22,6 @@ public class UserInterface
 	private final int FPSCOUNT_HEIGHT = 25;
 	private final int FPSCOUNT_FONTSIZE = 10;
 	
-	
-	
 	private final int NAME_GAP = 10;
 	private final int NAME_WIDTH = 100;
 	private final int NAME_HEIGHT = 25;
@@ -36,7 +34,7 @@ public class UserInterface
 	private LabelTextObject playerCount;
 	private LabelTextObject fpsCount;
 	
-	private LinkedList<LabelTextObject> name;
+	private LinkedList<LabelTextObject> names;
 	
 	private LabelSliderObject boostLabel;
 	
@@ -93,7 +91,7 @@ public class UserInterface
 		updatePlayerCount();
 		updateFpsCount();
 		updatePlayerBoost();
-		updateClientName();
+		updateClientsName();
 	}
 	
 	
@@ -115,16 +113,17 @@ public class UserInterface
 		fpsCount.updateText("FPS: "+ callback.getScreenRender().getFpsCount());
 	}
 	
-	private void updateClientName()
+	//FIXME: Find another way to implement the names of each client
+	private void updateClientsName()
 	{
 		
 		ArrayList<Player> playerList = callback.getMainClient().getEnvironmentHandler().getPlayerMap();
 		
-		if(playerList!= null && (name == null || playerList.size() != name.size()))
+		if(playerList!= null && (names == null || playerList.size() != names.size()))
 		{
-			name = new LinkedList<LabelTextObject>();
+			names = new LinkedList<LabelTextObject>();
 			
-			int quantity = playerList.size()-name.size();
+			int quantity = playerList.size()-names.size();
 			
 			for(int i = playerList.size()-quantity; i< playerList.size();i++)
 			{
@@ -138,7 +137,7 @@ public class UserInterface
 				currentObj.setAbsolute(false);
 				currentObj.updateText(playerList.get(i).getPlayerIP());
 				currentObj.setRenderingPriority(EnvironmentHandler.PRIORITYRENDER_NAME);
-				name.add(currentObj);
+				names.add(currentObj);
 				
 				//FIXME: Is it a problem ? YES!
 				callback.getScreenRender().removeToRender(currentObj);
@@ -147,7 +146,7 @@ public class UserInterface
 		
 		int index = 0;	
 		
-		for(LabelTextObject currentName: name)
+		for(LabelTextObject currentName: names)
 		{
 			if(!playerList.get(index).isAwake())
 			{
@@ -155,12 +154,10 @@ public class UserInterface
 			}
 			else
 			{
-				//WHY ?
 				currentName.translateTo(playerList.get(index).getX(),playerList.get(index).getY()+playerList.get(index).getHeight()/2+NAME_GAP);
 				callback.getScreenRender().addToRender(currentName);
 			}
 			index++;
 		}
-		
 	}
 }

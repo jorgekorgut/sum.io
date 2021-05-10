@@ -6,6 +6,10 @@ import java.util.Hashtable;
 
 import javax.imageio.ImageIO;
 
+/*
+ *  This class is responsible of reading images efficiently from the res.images folder.
+ */
+
 public class ImageCache 
 {
 	private Hashtable<String,BufferedImage> imageMap = null;
@@ -37,7 +41,4 @@ public class ImageCache
 			System.out.println("Error: Image did not load");
 		}	
 	}
-	
-	
-	
 }

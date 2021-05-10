@@ -2,9 +2,8 @@ package client.engine;
 
 public class RenderThread extends Thread 
 {
-		private int framesPerSecond;
-		private int cleanRate;
 		private ScreenRender callback;
+		private int framesPerSecond;
 		boolean quitThread = false;
 		
 		public RenderThread(ScreenRender callback, int framesPerSecond)
@@ -16,9 +15,7 @@ public class RenderThread extends Thread
 		@Override	
 		public void run()
 		{
-			
 			double timeFPS0 = System.currentTimeMillis();
-			
 			while(!quitThread)
 			{
 				double time = System.currentTimeMillis();
@@ -29,7 +26,6 @@ public class RenderThread extends Thread
 					callback.draw();
 					timeFPS0 = time;
 				}
-				
 			}
 		}
 

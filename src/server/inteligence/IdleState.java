@@ -1,6 +1,5 @@
 package server.inteligence;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -20,9 +19,9 @@ public class IdleState extends AbstractFSMState
 	public void updateState() 
 	{
 		//Change the state of the ui
-		ArrayList<Player> playerMap = player.getInteligenceBrain().getEnvironmentHandler().getPlayerMap();
-		ArrayList<GameObject> interactableObjects = player.getInteligenceBrain().getEnvironmentHandler().getInteractableObjects();
-		LinkedList<PatrolPoint> patrolPoints = player.getInteligenceBrain().getEnvironmentHandler().getPatrolPoints();
+		ArrayList<Player> playerMap = player.getInteligenceHandler().getEnvironmentHandler().getPlayerMap();
+		ArrayList<GameObject> interactableObjects = player.getInteligenceHandler().getEnvironmentHandler().getInteractableObjects();
+		LinkedList<PatrolPoint> patrolPoints = player.getInteligenceHandler().getEnvironmentHandler().getPatrolPoints();
 		
 		
 		this.exitState();
@@ -30,13 +29,14 @@ public class IdleState extends AbstractFSMState
 		
 		//FIXME: HardCoded
 		double min = 5000000;
-		//Serching for boost if it is necessary
+		
+		//Searching for boost if it is necessary
 		if(player.getBoostQuantity()<50)
 		{
 			GameObject boost = null;
 			min = 5000000;
 			
-			//Changed to normal for due to ConcurrentModificationException
+			//TODO: Changed to normal for due to ConcurrentModificationException
 			for(int i = 0 ; i< interactableObjects.size(); i++)
 				{
 					GameObject g = interactableObjects.get(i);

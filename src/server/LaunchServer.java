@@ -7,7 +7,7 @@ import common.communication.ActionPack;
 import common.communication.SyncPack;
 import server.communication.CommsHandler;
 import server.environment.EnvironmentHandler;
-import server.inteligence.InteligenceBrain;
+import server.inteligence.InteligenceHandler;
 
 
 public class LaunchServer 

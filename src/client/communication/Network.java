@@ -5,10 +5,14 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import client.engine.InputHandler;
 import common.communication.ActionPack;
 import common.communication.LobbyPack;
 import common.communication.SyncPack;
+
+/*
+ *  This class is responsible to create a socket. An important element that links the client with the server.
+ *  Also, it creates a listener Thread for wait new server data.
+ */
 
 public class Network {
 
@@ -59,12 +63,15 @@ public class Network {
 
 	public void sendPack(Object pack) 
 	{
+		//FIXME: I do not think that is necessary.
 		if(socket.isClosed())
 		{
+			//TODO: Implement a visual information.
 			System.out.println("NetWork: Socket is closed");
 			return;
 		}
 		
+		//SOLVED: Problem with the array that doesn't actualize when it is serialized, fixed by adding a new Instance of the informations packs that is a clone from the before.
 		if(pack instanceof LobbyPack)
 		{
 			pack = new LobbyPack((LobbyPack)pack);
@@ -80,12 +87,10 @@ public class Network {
 		
 		try 
 		{
-			//FIXME: Problem with the array that doesn't actualize when it is serialized, fixed by adding a new LobbyPack that is a clone from the before.
 			if(pack != null)
 			{
 				objectOutput.writeUnshared(pack);
 			}
-			
 		}
 		catch(IOException e)
 		{

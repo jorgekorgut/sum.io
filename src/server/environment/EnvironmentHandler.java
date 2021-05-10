@@ -1,16 +1,10 @@
 package server.environment;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import javax.swing.Timer;
-
 import common.communication.ActionPack;
-import common.communication.LobbyPack;
 import common.communication.SyncPack;
 import common.environment.ActionHandler;
 import common.environment.CircleColider;
@@ -19,9 +13,8 @@ import common.environment.GameObject;
 import common.environment.PatrolPoint;
 import common.environment.Platform;
 import common.environment.Player;
-import common.environment.RemoveControls;
 import server.LaunchServer;
-import server.inteligence.InteligenceBrain;
+import server.inteligence.InteligenceHandler;
 import server.inteligence.PlayerBot;
 
 public class EnvironmentHandler
@@ -31,9 +24,7 @@ public class EnvironmentHandler
 	public static final int PRIORITYRENDER_PLAYER = 1000;
 	public static final int FINAL_TIME = 3000;
 	
-	//FIXME: Why the time is not correct ?
 	private final int DEBRIFFING_TIME = 3000;
-	
 	private final int PLATFORM_SIZE = 1600;
 	
 	private ArrayList<Player> playerMap;
@@ -42,7 +33,7 @@ public class EnvironmentHandler
 	
 	private Platform platform;
 	private LaunchServer callback;
-	private InteligenceBrain inteligenceBrain;
+	private InteligenceHandler inteligenceHandler;
 	
 	private SyncPack syncPack;
 	
@@ -74,7 +65,7 @@ public class EnvironmentHandler
 		this.callback = callback;
 		syncPack = new SyncPack();
 		
-		inteligenceBrain = new InteligenceBrain(this);
+		inteligenceHandler = new InteligenceHandler(this);
 		
 		setupPlatform();
 		updateThread = new UpdateThread(this, updateRate);
@@ -82,7 +73,7 @@ public class EnvironmentHandler
 	
 	public ArrayList<Player> getPlayerMap() {return playerMap;}
 	public SyncPack getSyncPack() {return syncPack;}
-	public InteligenceBrain getInteligenceBrain() {return inteligenceBrain;}
+	public InteligenceHandler getInteligenceBrain() {return inteligenceHandler;}
 	public ArrayList<GameObject> getInteractableObjects(){return interactableObjects;}
 	public LinkedList<PatrolPoint> getPatrolPoints() {return patrolPoints;}
 	
@@ -94,7 +85,7 @@ public class EnvironmentHandler
 		
 		if(clientIP.startsWith(".BOT"))
 		{
-			inteligenceBrain.createBot(xPos, yPos,clientIP);
+			inteligenceHandler.createBot(xPos, yPos,clientIP);
 			return;
 		}
 		
@@ -368,6 +359,6 @@ public class EnvironmentHandler
 	public void kill() 
 	{
 		updateThread.kill();
-		inteligenceBrain.killAll();
+		inteligenceHandler.killAll();
 	}
 }

@@ -9,6 +9,10 @@ import client.engine.EngineHandler;
 import common.environment.CircleColider;
 import common.environment.GameObject;
 
+/*
+ * This class is responsible of handling and launch the animations.
+ */
+
 public class AnimationHandler 
 {
 	public static final String COLISION = "collisionanimation";
@@ -27,11 +31,10 @@ public class AnimationHandler
 		//FIXME: Hardcoded
 		animationMap.put(COLISION,new AnimationObject(COLISION,callback.getScreenRender().getImageMap().get(COLISION),6,120,120));
 		animationMap.put(START,new AnimationObject(START,callback.getScreenRender().getImageMap().get(START),4,200,200));
-		
 		animationMap.put(END,new AnimationObject(END,callback.getScreenRender().getImageMap().get(END),19,300,300));
 	}
 	
-	//How to iterate an HashMap ?
+	//This method set the current client for calculates the right position to launch the animation.
 	public void setClient(GameObject go)
 	{
 		for (AnimationObject ao : animationMap.values()) 
@@ -102,7 +105,7 @@ public class AnimationHandler
 		}}).start();
 	}
 	
-	public void onColision(GameObject colisionObject, GameObject player)
+	public void onCollision(GameObject colisionObject, GameObject player)
 	{
 		
 		int posX = (int)(colisionObject.getX()+callback.getWindow().getJFrame().getWidth()/2);

@@ -10,7 +10,7 @@ import java.io.ObjectInputStream;
 import java.io.StreamCorruptedException;
 
 /*
- *  This class is responsible to receive the information pack from the client that it is associated. After, it directs those data for their specific handlers.
+ *  This class is responsible to receive the information pack from the server. After that, it directs those data for their specific handlers.
  */
 
 public class ListeningThread extends Thread{

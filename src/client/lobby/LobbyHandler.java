@@ -35,7 +35,7 @@ import common.communication.LobbyPack;
 import common.environment.Player;
 
 /*
- *  LobbyHandler set up the visual support to manage the multiplayer and add bots.
+ *  LobbyHandler set up the visual support to manage the multiplayer, add bots and start the game.
  */
 
 public class LobbyHandler{
@@ -55,11 +55,11 @@ public class LobbyHandler{
 	private JFrame window;
 	private Hashtable<String,BufferedImage> imageMap = null;
 	
-	private boolean isActive = false;
+	private boolean isLobbyActive = false;
 	
 	public LobbyHandler(MainClient callback, String title, int w, int h)
 	{
-		isActive = true;
+		isLobbyActive = true;
 		this.callback = callback;
 		imageMap = callback.getImageCache().getImageMap();
 		
@@ -79,7 +79,7 @@ public class LobbyHandler{
 	
 	public LobbyHandler(MainClient callback, JFrame jFrame)
 	{
-		isActive = true;
+		isLobbyActive = true;
 		this.callback = callback;
 		this.window = jFrame;
 		lobbyPack = new LobbyPack();
@@ -135,7 +135,7 @@ public class LobbyHandler{
 	
 	private void setupStartButton()
 	{
-		//Avoid to create StartButton If he is not the server creator.
+		//Avoid to create StartButton if he is not the server creator.
 		if(callback.getLaunchServer() == null)
 		{
 			return;
@@ -146,9 +146,8 @@ public class LobbyHandler{
 		JButton startBt = new JButton("START");
 		startBt.setFont(LobbyPanel.FONT);
 		startBt.setContentAreaFilled(false);
-		//startBt.setBorderPainted(false);
 		
-		//AddSounds
+		//TODO: AddSound when the player interact with the button
 		startBt.addMouseListener(new MouseListener() 
 										{
 											@Override
@@ -199,26 +198,9 @@ public class LobbyHandler{
 		}
 	}
 	
-	public void onStart()
-	{	
-		lobbyPack.setStartFlag(true);
-		callback.getCommsHandler().sendPack(lobbyPack);
-	}
-	
-	public void onPlayerConnectServer(String name,String skinName)
-	{
-		this.player = name;
-		this.playerSkin = skinName;
-		System.out.println(skinName);
-		lobbyPack.addPlayer(name);
-		lobbyPack.addPlayerSkin(skinName);
-		callback.getCommsHandler().connectNetwork();
-		callback.getCommsHandler().sendPack(lobbyPack);
-	}
-	
 	public void syncLobby(LobbyPack lPack) 
 	{
-		if(!isActive)
+		if(!isLobbyActive)
 		{
 			callback.getAudioMaster().stopSound(AudioMaster.END_MUSIC_REFERENCE);
 			callback.getEnvironmentHandler().getFenetreGagnant().dispose();
@@ -255,10 +237,26 @@ public class LobbyHandler{
 			callback.launchGame();
 		}
 	}
+	
+	public void onStart()
+	{	
+		lobbyPack.setStartFlag(true);
+		callback.getCommsHandler().sendPack(lobbyPack);
+	}
+	
+	public void onPlayerConnectServer(String name,String skinName)
+	{
+		this.player = name;
+		this.playerSkin = skinName;
+		lobbyPack.addPlayer(name);
+		lobbyPack.addPlayerSkin(skinName);
+		callback.getCommsHandler().connectNetwork();
+		callback.getCommsHandler().sendPack(lobbyPack);
+	}
 
 	public void killAll() 
 	{
-		isActive = false;
+		isLobbyActive = false;
 		window.remove(mainPanel);
 	}
 }

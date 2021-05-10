@@ -2,9 +2,12 @@ package client.engine;
 
 import java.awt.Graphics;
 
+/*
+ * This class creates a slider bar that can be changed.
+ */
+
 public class LabelSliderObject extends LabelObject
 {
-
 	private LabelObject slider;
 	private double imgCorrection = 12.5/100;
 	
@@ -15,10 +18,7 @@ public class LabelSliderObject extends LabelObject
 	}
 	
 	@Override
-	public void draw(Graphics g) 
-	{
-		
-	}
+	public void draw(Graphics g) {}
 	
 	public void setImageCorrection(double value){this.imgCorrection = value;}
 	
@@ -29,6 +29,7 @@ public class LabelSliderObject extends LabelObject
 		slider.setRatioCutted(ratio);
 	}
 	
+	//FIXME: This can not be right.
 	@Override
 	public void revalidate(int x, int y, int width, int height)
 	{
@@ -36,7 +37,4 @@ public class LabelSliderObject extends LabelObject
 		super.revalidate(x, y, width, height);
 		slider.revalidate(x+3, y-3, width, height);
 	}
-	
-
-
 }

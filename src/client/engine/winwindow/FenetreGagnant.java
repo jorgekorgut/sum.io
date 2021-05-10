@@ -15,17 +15,12 @@ public class FenetreGagnant extends JFrame implements ActionListener{
 
    private JLabel textNom, textGagnant, imageFond;
 
-   private ImageIcon feuFond;
-
    private JButton rejouer, quitter;
-
-   private String name;
    
    private MainClient callback;
 
    public FenetreGagnant(MainClient callback, String name) {
 
-       this.name = name;
        this.callback = callback;
 
        this.setTitle("Victoire");
@@ -88,7 +83,6 @@ public class FenetreGagnant extends JFrame implements ActionListener{
     	 System.exit(1);
          this.dispose();
        }
-
    }
 
 }

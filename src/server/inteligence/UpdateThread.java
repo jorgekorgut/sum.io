@@ -3,10 +3,10 @@ package server.inteligence;
 public class UpdateThread extends Thread 
 {
 		private int updateRate;
-		private InteligenceBrain callback;
+		private InteligenceHandler callback;
 		private boolean quitThread;
 		
-		public UpdateThread(InteligenceBrain callback, int updateRate)
+		public UpdateThread(InteligenceHandler callback, int updateRate)
 		{
 			this.callback = callback;
 			this.updateRate = updateRate;
@@ -15,7 +15,6 @@ public class UpdateThread extends Thread
 		@Override
 		public void run()
 		{
-			
 			double time0 = System.currentTimeMillis();
 			
 			while(!quitThread)
@@ -25,7 +24,7 @@ public class UpdateThread extends Thread
 				
 				if(deltaTime >= updateRate)
 				{
-					callback.updateBotAction();
+					callback.update();
 					time0 = time;
 				}
 			}

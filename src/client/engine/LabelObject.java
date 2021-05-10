@@ -1,14 +1,13 @@
 package client.engine;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.util.LinkedList;
 
 import client.environment.EnvironmentHandler;
 import common.environment.GameObject;
+
+/*
+ * This class is an GameObject extension that was created to be used as an interface.
+ */
 
 public class LabelObject extends GameObject
 {
@@ -44,5 +43,4 @@ public class LabelObject extends GameObject
 		this.width = width;
 		this.height = height;
 	}
-
 }
