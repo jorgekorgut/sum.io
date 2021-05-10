@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import client.engine.EngineHandler;
-import common.environment.CircleColider;
+import common.environment.CircleCollider;
 import common.environment.GameObject;
 
 /*

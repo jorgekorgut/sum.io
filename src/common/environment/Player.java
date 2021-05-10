@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import server.inteligence.PlayerBot;
 
-public class Player extends GameObject implements CircleColider
+public class Player extends GameObject implements CircleCollider
 {
 	private final int max_speed = 15;
 	
@@ -93,7 +93,7 @@ public class Player extends GameObject implements CircleColider
 		return "P:"+ this.getPlayerIP();
 	}
 	
-	public void onColision(CircleColider obj2)
+	public void onCollision(CircleCollider obj2)
 	{
 		if(obj2 instanceof Player)
 		{

@@ -1,4 +1,4 @@
-package client.sound;
+package client.engine.sound;
 
 // Here im generating a "clip" that can be a music or a sound that ill atribute to a command
 

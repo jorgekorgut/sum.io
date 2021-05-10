@@ -1,19 +1,14 @@
 package client.startmenu;
 
-import javax.swing.*;
-
 import client.MainClient;
-import client.engine.ImageCache;
-
+import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
-import java.io.*;
-import java.io.IOException;
-import java.lang.reflect.Field;
 
 public class DebutJeu extends JFrame{
+	
+	private MainClient callback;
+	private String[] stringImages;
 	
 	/* Les boutons et label de l'interface*/
 	private JLabel bienvenue; 
@@ -26,12 +21,7 @@ public class DebutJeu extends JFrame{
 
 	
 	/* Les Panel de l'interface pour la disposition des elements*/
-	private JPanel panelCentre;
 	private JPanel lancerJeu;
-	private JPanel panelInter;
-	private JPanel panelPseudo;
-	private JPanel panelImage; 
-
 	
 	/*Les images permettant de choisir son personnage*/
 	private JLabel personnage;
@@ -41,14 +31,17 @@ public class DebutJeu extends JFrame{
 	private BufferedImage bob;
 	private BufferedImage logo;
 	private int currentImage=0;
-	private BufferedImage [] index; 
-	
-	private MainClient callback;
-	private String[] stringImages;
+	private BufferedImage [] images; 
 	
 	public DebutJeu(MainClient callback){
 		
 		this.callback = callback;
+		
+		
+		JPanel panelCentre;
+		JPanel panelInter;
+		JPanel panelPseudo;
+		JPanel panelImage;
 		
 		lancerJeu = new JPanel(new BorderLayout()); //panel principal
 		lancerJeu.setBackground (Color.WHITE);
@@ -60,7 +53,7 @@ public class DebutJeu extends JFrame{
 		minion = callback.getImageCache().getImageMap().get("minion");
 		logo =  callback.getImageCache().getImageMap().get("SUM.IO");
 		
-		this.index= new BufferedImage[]{diablo, bob, Mexicano, minion}; // creation d'un tableau d'image pour travailler avec les positions
+		this.images= new BufferedImage[]{diablo, bob, Mexicano, minion}; // creation d'un tableau d'image pour travailler avec les positions
 		stringImages = new String[] {"devil", "bob", "mexicano","minion"};
 		
 		panelImage= new JPanel (); //panel pour les images de personnages
@@ -121,7 +114,7 @@ public class DebutJeu extends JFrame{
 		connecterServeur = new JButton ("Connecter a un serveur !"); // Bouton pour creer le serveur
 		connecterServeur.setFont(new Font("Verdana", Font.BOLD, 20));
 		connecterServeur.setBackground (new Color(255,209,53) );
-		connecterServeur.addActionListener(new EcouteurConnexion1(this));
+		connecterServeur.addActionListener(new EcouteurLancerOptions(this));
 		connecterServeur.setOpaque(true);
 		connecterServeur.setBorderPainted(false);
 		connecterServeur.setForeground(Color.RED);
@@ -157,11 +150,11 @@ public class DebutJeu extends JFrame{
 	}
 	
 	public void deplacementDroite(){
-		if(currentImage<index.length-1){
+		if(currentImage<images.length-1){
 				currentImage++;
 		}
-			personnage.setIcon(getScaledInstance(index[currentImage]));
-			panelImage.repaint();
+			personnage.setIcon(getScaledInstance(images[currentImage]));
+			this.repaint();
 			
 	lancerJeu.repaint();
 
@@ -171,8 +164,8 @@ public class DebutJeu extends JFrame{
 		if(currentImage>0){
 				currentImage--;
 		}
-		personnage.setIcon(getScaledInstance(index[currentImage]));
-		panelImage.repaint();
+		personnage.setIcon(getScaledInstance(images[currentImage]));
+		this.repaint();
 			
 	lancerJeu.repaint();
    }

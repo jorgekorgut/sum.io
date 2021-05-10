@@ -4,10 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class EcouteurConnexion2 implements ActionListener {
+public class EcouteurConnecterAuServeur implements ActionListener {
 	private ConnectServer cs;
 	
-	public EcouteurConnexion2 (ConnectServer cs){
+	public EcouteurConnecterAuServeur (ConnectServer cs){
 		this.cs=cs;
 	}
 	public void actionPerformed (ActionEvent ae){

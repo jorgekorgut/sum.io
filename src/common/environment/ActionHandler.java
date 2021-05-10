@@ -5,6 +5,10 @@ import java.util.LinkedList;
 import common.communication.ActionPack;
 import common.communication.PlayerAction;
 
+/*
+ * This class is responsible of transforming the player action in a serverResponse.
+ */
+
 public class ActionHandler 
 {
 

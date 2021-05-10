@@ -1,15 +1,21 @@
 package common.environment;
 
-public interface CircleColider 
+/*
+ * This class enable the collision for a GameObject.
+ * 		- say if there is a collision with another circle
+ * 		- call onCollision() Method
+ */
+
+public interface CircleCollider 
 {	
 	public abstract double getX();
 	public abstract double getY();
 	public abstract int getRadiusColider();
-	public abstract void onColision(CircleColider obj2);
+	public abstract void onCollision(CircleCollider obj2);
 	public boolean getFlagCollision();
 	public void setFlagCollision(boolean value);
 	
-	public default boolean hasCollidedTo(CircleColider obj2)
+	public default boolean hasCollidedTo(CircleCollider obj2)
 	{
 		boolean haveColision = false;
 		
@@ -23,10 +29,9 @@ public interface CircleColider
 		
 		if(haveColision)
 		{
-			onColision(obj2);
+			onCollision(obj2);
 		}
 		
 		return haveColision;
 	}
-	
 }

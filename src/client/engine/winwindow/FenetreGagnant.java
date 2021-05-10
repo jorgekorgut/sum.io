@@ -7,7 +7,7 @@ import javax.security.auth.callback.Callback;
 import javax.swing.*;
 
 import client.MainClient;
-import client.sound.AudioMaster;
+import client.engine.sound.AudioMaster;
 
 import java.awt.event.*;
 

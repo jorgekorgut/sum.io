@@ -30,7 +30,7 @@ import client.engine.ScreenRender;
 import client.engine.UserInterface;
 import client.engine.Window;
 import client.engine.animation.AnimationHandler;
-import client.sound.AudioMaster;
+import client.engine.sound.AudioMaster;
 import common.communication.LobbyPack;
 import common.environment.Player;
 

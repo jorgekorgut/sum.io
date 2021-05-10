@@ -1,6 +1,10 @@
 package common.environment;
 
-public class CollectableBoost extends GameObject implements CircleColider
+/*
+ * This class is the Coll
+ */
+
+public class CollectableBoost extends GameObject implements CircleCollider
 {
 	private int boostGain = 50;
 	private boolean flagColision = false;
@@ -42,7 +46,7 @@ public class CollectableBoost extends GameObject implements CircleColider
 	
 
 	@Override
-	public void onColision(CircleColider obj2) 
+	public void onCollision(CircleCollider obj2) 
 	{
 		if(obj2 instanceof Player)
 		{

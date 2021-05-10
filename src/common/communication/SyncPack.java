@@ -5,6 +5,11 @@ import common.environment.GameObject;
 import common.environment.Platform;
 import common.environment.Player;
 
+/*
+ * This class is responsible to send to the client the informations necessary to 
+ * synchronize the server environment.
+ */
+
 public class SyncPack implements java.io.Serializable
 {
 	private ArrayList<Player> playerMap;
@@ -42,17 +47,12 @@ public class SyncPack implements java.io.Serializable
 	public int getPlayersCount() {return playersCount;}
 	public ArrayList<GameObject> getInteractableObjects() {return interactableObjects;}
 	
-	public void addPlayerMap(ArrayList<Player> playerMap)
-	{
-		this.playerMap = playerMap;
-	}
-	
-	public void addPersonalPlayer(Player player)
+	public void setPersonalPlayer(Player player)
 	{
 		this.player = player;
 	}
 	
-	public void addPlatform(Platform platform) 
+	public void setPlatform(Platform platform) 
 	{
 		this.platform = platform;
 	}
@@ -62,7 +62,7 @@ public class SyncPack implements java.io.Serializable
 		playerMap = onlyPlayerInstance;
 	}
 	
-	public void addInteractableObject(ArrayList<GameObject> interactableObjects) 
+	public void setInteractableObject(ArrayList<GameObject> interactableObjects) 
 	{
 		this.interactableObjects = interactableObjects;
 	}
@@ -76,6 +76,4 @@ public class SyncPack implements java.io.Serializable
 	{
 		this.winner = winner;
 	}
-	
-
 }

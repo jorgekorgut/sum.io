@@ -17,9 +17,9 @@ import common.environment.Player;
 import client.engine.EngineHandler;
 import client.engine.LabelTextObject;
 import client.engine.ScreenRender;
+import client.engine.sound.AudioMaster;
 import client.engine.winwindow.FenetreGagnant;
 import client.lobby.LobbyHandler;
-import client.sound.AudioMaster;
 
 /*
  * This class is responsible to receive the SyncPack and update the client conditions.

@@ -4,6 +4,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/*
+ * This class compact the informations to synchronize the client with lobby server.
+ */
+
 public class LobbyPack implements Serializable
 {
 	private LinkedList<String> playerList;
@@ -52,6 +56,4 @@ public class LobbyPack implements Serializable
 	{
 		this.skinPlayer = skinPlayer;
 	}
-	
-
 }

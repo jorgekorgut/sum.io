@@ -1,6 +1,6 @@
 package common.environment;
 
-public class Platform extends GameObject implements CircleColider
+public class Platform extends GameObject implements CircleCollider
 {
 	private boolean flagColision = false;
 	
@@ -21,7 +21,7 @@ public class Platform extends GameObject implements CircleColider
 	}
 	
 	@Override
-	public void onColision(CircleColider obj2) 
+	public void onCollision(CircleCollider obj2) 
 	{
 		
 	}

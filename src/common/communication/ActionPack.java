@@ -4,6 +4,11 @@ import java.util.LinkedList;
 
 import common.environment.Player;
 
+/*
+ * This class takes a player action and send to the server.
+ * Each ActionPack has a player/client associated.
+ */
+
 public class ActionPack implements java.io.Serializable
 {
 	private LinkedList<PlayerAction> playerActionList = null;

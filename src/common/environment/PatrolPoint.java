@@ -1,6 +1,6 @@
 package common.environment;
 
-public class PatrolPoint extends GameObject implements CircleColider
+public class PatrolPoint extends GameObject implements CircleCollider
 {
 	
 	private boolean flagColision = false;
@@ -33,7 +33,7 @@ public class PatrolPoint extends GameObject implements CircleColider
 	}
 
 	@Override
-	public void onColision(CircleColider obj2)
+	public void onCollision(CircleCollider obj2)
 	{
 		if(obj2 instanceof Player)
 		{

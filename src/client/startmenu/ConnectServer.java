@@ -39,7 +39,7 @@ public class ConnectServer extends JFrame
 
 		
 		connecterServeur = new JButton ("Connecter !"); // Bouton pour creer le serveur
-		connecterServeur.addActionListener(new EcouteurConnexion2(this));
+		connecterServeur.addActionListener(new EcouteurConnecterAuServeur(this));
 		connecterServeur.setBackground (new Color(255,209,53) );
 		connecterServeur.setOpaque(true);
 		connecterServeur.setBorderPainted(false);

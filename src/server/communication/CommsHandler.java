@@ -132,7 +132,7 @@ public class CommsHandler extends Thread
 		if(sPack.getPlayer() instanceof PlayerBot)
 		{
 			Player p = sPack.getPlayer();
-			newSPack.addPersonalPlayer(new Player(p.getName(),p.getX(),p.getY(),p.getWidth(),p.getHeight(),p.getPlayerIP(),p.getRenderingPriority(),p.isAwake(),p.getBoostQuantity(),p.getFlagCollision()));
+			newSPack.setPersonalPlayer(new Player(p.getName(),p.getX(),p.getY(),p.getWidth(),p.getHeight(),p.getPlayerIP(),p.getRenderingPriority(),p.isAwake(),p.getBoostQuantity(),p.getFlagCollision()));
 		}
 		
 		for(Player p : playerMap)

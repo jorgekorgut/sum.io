@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import common.communication.ActionPack;
 import common.communication.SyncPack;
 import common.environment.ActionHandler;
-import common.environment.CircleColider;
+import common.environment.CircleCollider;
 import common.environment.CollectableBoost;
 import common.environment.GameObject;
 import common.environment.PatrolPoint;
@@ -105,8 +105,8 @@ public class EnvironmentHandler
 	public void connectPlayer(Player currentPlayer)
 	{
 		playerMap.add(currentPlayer);
-		syncPack.addPersonalPlayer(currentPlayer);
-		syncPack.addPlayerMap(playerMap);
+		syncPack.setPersonalPlayer(currentPlayer);
+		syncPack.setPlayerMap(playerMap);
 		
 		//callback.getCommsHandler().generateSyncPack();
 		
@@ -131,7 +131,7 @@ public class EnvironmentHandler
 		Platform platform = new Platform("platform1",0,0,PLATFORM_SIZE,PLATFORM_SIZE,PRIORITYRENDER_BACKGROUND);
 		//callback.getEngineHandler().getScreenRender().addToRender(platform);
 		this.platform = platform;
-		syncPack.addPlatform(platform);
+		syncPack.setPlatform(platform);
 	}
 	
 	private void addPatrolPoint()
@@ -177,7 +177,7 @@ public class EnvironmentHandler
 					}
 					GameObject go = itr.next();
 					cb = new CollectableBoost("boost", randomX, randomY, 50, 50);
-					if(((CircleColider)go).hasCollidedTo(cb) && go.isAwake())
+					if(((CircleCollider)go).hasCollidedTo(cb) && go.isAwake())
 					{
 						isUnique = false;
 						break;
@@ -227,14 +227,14 @@ public class EnvironmentHandler
 					}
 				}
 				
-				if(!p1.hasCollidedTo((CircleColider)platform))
+				if(!p1.hasCollidedTo((CircleCollider)platform))
 				{
 					onPlayerOut(p1);
 				}
 				
 				for(GameObject go: interactableObjects)
 				{
-					if(go.isAwake() && ((CircleColider)go).hasCollidedTo(p1))
+					if(go.isAwake() && ((CircleCollider)go).hasCollidedTo(p1))
 					{
 						
 					}
@@ -246,7 +246,7 @@ public class EnvironmentHandler
 				
 				for(GameObject go: patrolPoints)
 				{
-					if(go.isAwake() & ((CircleColider)go).hasCollidedTo(p1))
+					if(go.isAwake() & ((CircleCollider)go).hasCollidedTo(p1))
 					{
 						toRemoveObj = go;
 					}
@@ -287,7 +287,7 @@ public class EnvironmentHandler
 	
 	private void onPlayerCollided(Player p1,Player p2)
 	{
-		p1.hasCollidedTo((CircleColider)p2);
+		p1.hasCollidedTo((CircleCollider)p2);
 	}
 	
 	private void onPlayerOut(Player p)
