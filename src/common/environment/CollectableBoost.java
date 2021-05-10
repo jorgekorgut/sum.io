@@ -1,7 +1,7 @@
 package common.environment;
 
 /*
- * This class is the Coll
+ * This class represents the boost item.
  */
 
 public class CollectableBoost extends GameObject implements CircleCollider
@@ -43,7 +43,6 @@ public class CollectableBoost extends GameObject implements CircleCollider
 	{
 		flagColision = value;
 	}
-	
 
 	@Override
 	public void onCollision(CircleCollider obj2) 
@@ -55,5 +54,4 @@ public class CollectableBoost extends GameObject implements CircleCollider
 			sleepObject();
 		}
 	}
-
 }
