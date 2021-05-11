@@ -10,7 +10,6 @@ import server.environment.EnvironmentHandler;
 
 public class IntelligenceHandler
 {
-
 	private ArrayBlockingQueue<PlayerBot> bots;
 	private EnvironmentHandler callback;
 	

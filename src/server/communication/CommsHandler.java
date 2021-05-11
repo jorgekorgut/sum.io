@@ -1,14 +1,10 @@
 package server.communication;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.LinkedList;
-
-import javax.swing.Timer;
 
 import common.communication.ActionPack;
 import common.communication.LobbyPack;
@@ -31,7 +27,7 @@ public class CommsHandler extends Thread
 	private LinkedList<SendHandler> sendHandler;
 	
 	private UpdateThread updateThread;
-	private int updateRate = 20;
+	private int updateRate = 10;
 	
 	private LobbyPack lobbyPack;
 	

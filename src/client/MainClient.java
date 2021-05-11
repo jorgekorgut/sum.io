@@ -63,7 +63,6 @@ public class MainClient
 		
 		lobbyHandler.onPlayerConnectServer(playerName,skinName);
 	}
-	
 	public void returnLobby()
 	{	
 		engineHandler.killAll();

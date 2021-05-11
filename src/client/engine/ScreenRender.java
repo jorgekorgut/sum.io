@@ -34,7 +34,7 @@ public class ScreenRender{
 	//FIXME: try to find something better in the future.
 	private Hashtable<String,BufferedImage> imageMap = null;
 	
-	private final int TEORICAL_FPS = 100;
+	private final int TEORICAL_FPS = 80;
 	private int realFps = TEORICAL_FPS;
 	private double oldT = 0;
 	
