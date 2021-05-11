@@ -1,7 +1,7 @@
 package common.environment;
 
-public class GameObject implements Comparable<GameObject>, java.io.Serializable{
-	
+public class GameObject implements Comparable<GameObject>, java.io.Serializable
+{
 	private int renderingPriority;
 	
 	private String name;
@@ -59,14 +59,8 @@ public class GameObject implements Comparable<GameObject>, java.io.Serializable{
 	{
 		if(this.renderingPriority > go.getRenderingPriority()){return 1;}
 		if(this.renderingPriority < go.getRenderingPriority()){return -1;}
-		//To let the compareTo consistent
+		//FIXME: Let the compareTo consistent
 		return 0;
-		/*if(go.equals(this))
-		{
-			return 0;
-		}
-		
-		return 1;*/
 	}
 	
 	@Override

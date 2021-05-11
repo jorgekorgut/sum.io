@@ -10,16 +10,21 @@ import common.environment.ActionHandler;
 import common.environment.CircleCollider;
 import common.environment.CollectableBoost;
 import common.environment.GameObject;
-import common.environment.PatrolPoint;
 import common.environment.Platform;
 import common.environment.Player;
 import server.LaunchServer;
-import server.inteligence.InteligenceHandler;
-import server.inteligence.PlayerBot;
+import server.intelligence.IntelligenceHandler;
+import server.intelligence.PlayerBot;
+
+/*
+ * This class is responsible for: 
+ * 		- updating environment state
+ * 		- handling player collisions
+ * 		- executing players actions
+ */
 
 public class EnvironmentHandler
 {
-	
 	public static final int PRIORITYRENDER_BACKGROUND = 100;
 	public static final int PRIORITYRENDER_PLAYER = 1000;
 	public static final int FINAL_TIME = 3000;
@@ -33,7 +38,7 @@ public class EnvironmentHandler
 	
 	private Platform platform;
 	private LaunchServer callback;
-	private InteligenceHandler inteligenceHandler;
+	private IntelligenceHandler intelligenceHandler;
 	
 	private SyncPack syncPack;
 	
@@ -65,7 +70,7 @@ public class EnvironmentHandler
 		this.callback = callback;
 		syncPack = new SyncPack();
 		
-		inteligenceHandler = new InteligenceHandler(this);
+		intelligenceHandler = new IntelligenceHandler(this);
 		
 		setupPlatform();
 		updateThread = new UpdateThread(this, updateRate);
@@ -73,7 +78,7 @@ public class EnvironmentHandler
 	
 	public ArrayList<Player> getPlayerMap() {return playerMap;}
 	public SyncPack getSyncPack() {return syncPack;}
-	public InteligenceHandler getInteligenceBrain() {return inteligenceHandler;}
+	public IntelligenceHandler getInteligenceBrain() {return intelligenceHandler;}
 	public ArrayList<GameObject> getInteractableObjects(){return interactableObjects;}
 	public LinkedList<PatrolPoint> getPatrolPoints() {return patrolPoints;}
 	
@@ -85,7 +90,7 @@ public class EnvironmentHandler
 		
 		if(clientIP.startsWith(".BOT"))
 		{
-			inteligenceHandler.createBot(xPos, yPos,clientIP);
+			intelligenceHandler.createBot(xPos, yPos,clientIP);
 			return;
 		}
 		
@@ -210,7 +215,7 @@ public class EnvironmentHandler
 		ActionHandler.doPlayerAction(aPack);
 	}
 	
-	private void colisionHanlder()
+	private void collisionHanlder()
 	{
 		//FIXME: This is a simple and a bad methode to find a colision. There are more fancy ways to do the same thing
 		for(int i = 0; i< playerMap.size();i++)
@@ -312,7 +317,7 @@ public class EnvironmentHandler
 	{
 		if(!isPaused)
 		{
-			colisionHanlder();
+			collisionHanlder();
 			movementHandler();
 			addBoostHandler();
 			addPatrolPoint();
@@ -359,6 +364,6 @@ public class EnvironmentHandler
 	public void kill() 
 	{
 		updateThread.kill();
-		inteligenceHandler.killAll();
+		intelligenceHandler.killAll();
 	}
 }

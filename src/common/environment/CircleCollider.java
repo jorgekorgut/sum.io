@@ -10,7 +10,7 @@ public interface CircleCollider
 {	
 	public abstract double getX();
 	public abstract double getY();
-	public abstract int getRadiusColider();
+	public abstract int getRadiusCollider();
 	public abstract void onCollision(CircleCollider obj2);
 	public boolean getFlagCollision();
 	public void setFlagCollision(boolean value);
@@ -22,7 +22,7 @@ public interface CircleCollider
 		double xDist = Math.pow(getX() - obj2.getX(), 2);
 		double yDist = Math.pow(getY() - obj2.getY(), 2);
 		
-		if(xDist + yDist < Math.pow(getRadiusColider() + obj2.getRadiusColider(),2))
+		if(xDist + yDist < Math.pow(getRadiusCollider() + obj2.getRadiusCollider(),2))
 		{
 			haveColision = !haveColision;
 		}

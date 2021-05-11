@@ -11,6 +11,11 @@ import common.communication.ActionPack;
 import common.communication.LobbyPack;
 import common.communication.SyncPack;
 
+/*
+ * This class represents each client connexion that:
+ * 		- Listen to client commands.
+ */
+
 public class ClientConnexion extends Thread
 {
 	private Socket socket;
@@ -61,7 +66,6 @@ public class ClientConnexion extends Thread
 		{
 			//The network closed.
 			System.out.println("Client disconnected.");
-			//e.printStackTrace();
 		}
 		close();
 		callback.remove(this);

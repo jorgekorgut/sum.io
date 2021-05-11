@@ -15,7 +15,7 @@ import common.communication.LobbyPack;
 import common.communication.SyncPack;
 import common.environment.Player;
 import server.LaunchServer;
-import server.inteligence.PlayerBot;
+import server.intelligence.PlayerBot;
 
 /*
  *  CommsHandler receive all the Packs from the client and manage to send them to their specific classes.
@@ -98,6 +98,7 @@ public class CommsHandler extends Thread
 		sendHandler.remove(index);
 	}
 	
+	//FIXME: We can merge sendSyncPack and sendLobbyPack into an unique method.
 	public void sendSyncPack(SyncPack sPack)
 	{
 		for(SendHandler sHandler : sendHandler)
@@ -167,5 +168,4 @@ public class CommsHandler extends Thread
 		lobbyPack.setStartFlag(lPack.getStartFlag());
 		sendLobbyPack(lobbyPack);
 	}
-	
 }

@@ -1,12 +1,16 @@
 package server.communication;
 
-import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-
 import common.communication.ActionPack;
 import common.communication.LobbyPack;
 import common.communication.SyncPack;
+
+/*
+ * This class is responsible for:
+ *  	- sending game synchronization.
+ * 		- sending lobby informations.
+ */
 
 public class SendHandler{
 	

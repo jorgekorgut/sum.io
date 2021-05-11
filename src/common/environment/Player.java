@@ -2,14 +2,14 @@ package common.environment;
 
 import java.io.IOException;
 
-import server.inteligence.PlayerBot;
+import server.intelligence.PlayerBot;
 
 public class Player extends GameObject implements CircleCollider
 {
-	private final int max_speed = 15;
+	public final int MAX_SPEED = 15;
 	
 	private String playerIP;
-	private int radiusColider;
+	private int radiusCollider;
 	
 	private double speedX = 0;
 	private double speedY = 0;
@@ -17,7 +17,7 @@ public class Player extends GameObject implements CircleCollider
 	private double accY = 1.4;
 	
 	private int stunTime = 500;
-	private boolean flagColision = false;
+	private boolean flagCollision = false;
 	
 	private int speedBoost = 25;
 	private int boostMax = 100;
@@ -28,17 +28,17 @@ public class Player extends GameObject implements CircleCollider
 	{
 		super(name, x, y, width, height, priorityRender);
 		this.playerIP = playerIP;
-		this.radiusColider = width/2;
+		this.radiusCollider = width/2;
 	}
 	
-	public Player(String name, double x, double y, int width, int height, String playerIP,int priorityRender,boolean isAwake,int boostQuantity, boolean flagColision) 
+	public Player(String name, double x, double y, int width, int height, String playerIP,int priorityRender,boolean isAwake,int boostQuantity, boolean flagCollision) 
 	{
 		super(name, x, y, width, height, priorityRender);
 		this.playerIP = playerIP;
-		this.radiusColider = width/2;
+		this.radiusCollider = width/2;
 		this.isAwake = isAwake;
 		this.boostQuantity = boostQuantity;
-		this.flagColision = flagColision;
+		this.flagCollision = flagCollision;
 	}
 
 	public Player(Player player) 
@@ -46,10 +46,10 @@ public class Player extends GameObject implements CircleCollider
 		super(player.getName(), player.getX(), player.getY(), player.getWidth(), player.getHeight(), player.getRenderingPriority());
 		
 		this.playerIP = player.getPlayerIP();
-		this.radiusColider = player.getRadiusColider();
+		this.radiusCollider = player.getRadiusCollider();
 		this.isAwake = player.isAwake();
 		this.boostQuantity = player.getBoostQuantity();
-		this.flagColision = player.getFlagCollision();
+		this.flagCollision = player.getFlagCollision();
 	}
 
 	public String getPlayerIP() {return playerIP;}
@@ -60,12 +60,10 @@ public class Player extends GameObject implements CircleCollider
 	public double getAccX() {return accX;}
 	public double getAccY() {return accY;}
 	public void setAccX(double accX) { this.accX = accX;}
-	public void setAccY(double accY) { this.accY = accY;}
-	
-	public int getRadiusColider() {return radiusColider;}
-	public boolean getFlagCollision() {return flagColision;}
-	public void setFlagCollision(boolean flagColision) {this.flagColision = flagColision;}
-	
+	public void setAccY(double accY) { this.accY = accY;}	
+	public int getRadiusCollider() {return radiusCollider;}
+	public boolean getFlagCollision() {return flagCollision;}
+	public void setFlagCollision(boolean flagCollision) {this.flagCollision = flagCollision;}
 	public int getBoostQuantity(){return boostQuantity;}
 	
 	public boolean equals(Object o)
@@ -97,11 +95,11 @@ public class Player extends GameObject implements CircleCollider
 	{
 		if(obj2 instanceof Player)
 		{
-			colisionPlayerHandler((Player)obj2);
+			collisionPlayerHandler((Player)obj2);
 		}
 	}
 	
-	private void colisionPlayerHandler(Player obj2)
+	private void collisionPlayerHandler(Player obj2)
 	{
 		//Remove the control from the player to handle the colision
 		if(!getFlagCollision())
@@ -125,7 +123,7 @@ public class Player extends GameObject implements CircleCollider
 										Math.pow(this.getY()-obj2.getY(),2)
 										);
 		
-		double overlapDistance = 0.5 * (ballsDistance - (radiusColider + obj2.getRadiusColider()));
+		double overlapDistance = 0.5 * (ballsDistance - (radiusCollider + obj2.getRadiusCollider()));
 		
 		//TO avoid one ball enter inside the other
 		this.translate( 
@@ -139,7 +137,7 @@ public class Player extends GameObject implements CircleCollider
 			 					);
 		
 		
-		ballsDistance = obj2.getRadiusColider() + radiusColider;
+		ballsDistance = obj2.getRadiusCollider() + radiusCollider;
 		//Normal Vectors
 		double nX = (obj2.getX() - this.getX())/ballsDistance;
 		double nY = (obj2.getY() - this.getY())/ballsDistance;
@@ -158,11 +156,11 @@ public class Player extends GameObject implements CircleCollider
 		
 		//Energy Created for the colision
 		
-		double m1 = (dpNorm1 * radiusColider - obj2.getRadiusColider() +
-					2 * obj2.getRadiusColider() * dpNorm2)/(radiusColider + obj2.getRadiusColider());
+		double m1 = (dpNorm1 * radiusCollider - obj2.getRadiusCollider() +
+					2 * obj2.getRadiusCollider() * dpNorm2)/(radiusCollider + obj2.getRadiusCollider());
 		
-		double m2 = (dpNorm2 * radiusColider - obj2.getRadiusColider() +
-				2 * obj2.getRadiusColider() * dpNorm1)/(radiusColider + obj2.getRadiusColider());
+		double m2 = (dpNorm2 * radiusCollider - obj2.getRadiusCollider() +
+				2 * obj2.getRadiusCollider() * dpNorm1)/(radiusCollider + obj2.getRadiusCollider());
 		
 		setSpeedX( tX*dpTan1 + nX*m1);
 		setSpeedY( tY*dpTan1 + nY*m1);
@@ -172,7 +170,7 @@ public class Player extends GameObject implements CircleCollider
 	
 	public void accelerateX(int direction) 
 	{
-		if( ! (Math.pow(speedY,2) + Math.pow((speedX + accX * direction),2) >  Math.pow(max_speed,2)))
+		if( ! (Math.pow(speedY,2) + Math.pow((speedX + accX * direction),2) >  Math.pow(MAX_SPEED,2)))
 		{
 			speedX = (speedX + accX* direction);
 		}
@@ -181,7 +179,7 @@ public class Player extends GameObject implements CircleCollider
 	
 	public void accelerateY(int direction) 
 	{		
-		if( ! (Math.pow(speedX,2) + Math.pow(speedY + accY*direction,2) > Math.pow(max_speed,2)) )
+		if( ! (Math.pow(speedX,2) + Math.pow(speedY + accY*direction,2) > Math.pow(MAX_SPEED,2)) )
 		{
 			speedY = (speedY + accY*direction);
 		}
@@ -190,7 +188,7 @@ public class Player extends GameObject implements CircleCollider
 	
 	private void limitSpeed()
 	{
-		if(Math.pow(speedX,2)+Math.pow(speedY,2) > Math.pow(max_speed,2) && !flagColision)
+		if(Math.pow(speedX,2)+Math.pow(speedY,2) > Math.pow(MAX_SPEED,2) && !flagCollision)
 		{
 			double directionX = 0;
 			
@@ -198,9 +196,8 @@ public class Player extends GameObject implements CircleCollider
 			{
 				directionX = Math.abs(speedX) / (Math.abs(speedX) + Math.abs(speedY));
 				
-				speedX = Math.signum(speedX)*max_speed * directionX;
-				speedY = Math.signum(speedY)*max_speed * (1-directionX);
-				
+				speedX = Math.signum(speedX)*MAX_SPEED * directionX;
+				speedY = Math.signum(speedY)*MAX_SPEED * (1-directionX);
 			}
 		}
 	}
@@ -213,7 +210,7 @@ public class Player extends GameObject implements CircleCollider
 	//TODO: Change how the attackboost works.
 	public void attackBoost() 
 	{
-		if(flagColision)
+		if(flagCollision)
 		{
 			return;
 		}

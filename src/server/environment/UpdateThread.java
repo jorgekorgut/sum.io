@@ -1,5 +1,9 @@
 package server.environment;
 
+/*
+ * This class is responsible for updating the game environment.
+ */
+
 public class UpdateThread extends Thread 
 {
 		private int updateRate;

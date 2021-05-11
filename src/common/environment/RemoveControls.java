@@ -28,24 +28,8 @@ public class RemoveControls extends Thread
 			e.printStackTrace();
 		}
 		
-		/*
-		boolean quitThread = false;
-		double time0 = System.currentTimeMillis();
-		
-		while(!quitThread)
-		{
-			double time = System.currentTimeMillis();
-			double deltaTime = time - time0;
-			
-			if(deltaTime >= timeSleep)
-			{
-				quitThread= true;
-			}
-		}
-		*/
 		player.setAccX(accX1);
 		player.setAccY(accY1);
 		player.setFlagCollision(false);
 	}
-
 }

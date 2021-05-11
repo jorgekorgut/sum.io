@@ -27,7 +27,7 @@ public class CollectableBoost extends GameObject implements CircleCollider
 	}
 
 	@Override
-	public int getRadiusColider() 
+	public int getRadiusCollider() 
 	{
 		return width/2;
 	}

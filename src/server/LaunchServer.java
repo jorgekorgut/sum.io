@@ -3,12 +3,8 @@ package server;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import common.communication.ActionPack;
-import common.communication.SyncPack;
 import server.communication.CommsHandler;
 import server.environment.EnvironmentHandler;
-import server.inteligence.InteligenceHandler;
-
 
 public class LaunchServer 
 {
@@ -17,6 +13,7 @@ public class LaunchServer
 	
 	public LaunchServer()
 	{	
+		//FIXME: Choose the port in the start window.
 		int port = 8000;
 		commsHandler = new CommsHandler(port,this);
 		commsHandler.start();

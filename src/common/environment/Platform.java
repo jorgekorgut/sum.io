@@ -1,8 +1,12 @@
 package common.environment;
 
+/*
+ * This class represents the Platform of the game.
+ */
+
 public class Platform extends GameObject implements CircleCollider
 {
-	private boolean flagColision = false;
+	private boolean flagCollision = false;
 	
 	public Platform(String name, int x, int y, int width, int height, int renderingPriority) 
 	{
@@ -10,12 +14,12 @@ public class Platform extends GameObject implements CircleCollider
 	}
 
 	@Override
-	public boolean getFlagCollision() {return flagColision;}
+	public boolean getFlagCollision() {return flagCollision;}
 	@Override
-	public void setFlagCollision(boolean value) {flagColision = value;}
+	public void setFlagCollision(boolean value) {flagCollision = value;}
 	
 	@Override
-	public int getRadiusColider() 
+	public int getRadiusCollider() 
 	{
 		return width/2;
 	}
@@ -25,5 +29,4 @@ public class Platform extends GameObject implements CircleCollider
 	{
 		
 	}
-
 }

@@ -1,5 +1,9 @@
 package server.communication;
 
+/*
+ * This class is responsible for updating the communication and so, send a synchronization to the server.
+ */
+
 public class UpdateThread extends Thread 
 {
 		private int updateRate;
@@ -15,17 +19,17 @@ public class UpdateThread extends Thread
 		@Override
 		public void run()
 		{
-			double timeFPS0 = System.currentTimeMillis();
+			double time0 = System.currentTimeMillis();
 			
 			while(!quitThread)
 			{
 				double time = System.currentTimeMillis();
-				double deltaTimeFPS = time - timeFPS0;
+				double deltaTime = time - time0;
 				
-				if(deltaTimeFPS >= updateRate)
+				if(deltaTime >= updateRate)
 				{
 					callback.generateSyncPack();
-					timeFPS0 = time;
+					time0 = time;
 				}
 			}
 		}
