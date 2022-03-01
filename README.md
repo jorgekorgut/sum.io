@@ -32,3 +32,9 @@ l'espace: rejoindre un serveur (attention, ce mode ne fonctionne que si toutes l
 
 # Images:
 <img src="https://raw.githubusercontent.com/jorgekorgut/sum.io/main/Images_Execution/sumio_lobby.png" width="500">
+<img src="https://raw.githubusercontent.com/jorgekorgut/sum.io/main/Images_Execution/sumio_playing.png" width="500">
+<img src="https://raw.githubusercontent.com/jorgekorgut/sum.io/main/Images_Executionsumio_win.png" width="500">
+<img src="https://raw.githubusercontent.com/jorgekorgut/sum.io/main/Images_Execution/sumio_bots.png" width="500">
+<img src="https://raw.githubusercontent.com/jorgekorgut/sum.io/main/Images_Execution/sumio_bots_fight.png" width="500">
+
+
