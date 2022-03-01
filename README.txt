@@ -1,9 +1,9 @@
-README
+#README
 
-pour executer le programme:
+##pour executer le programme:
 	-ouvrir le dossier "Exécutable du jeu” et lancer le fichier “sumio.jar”.
 
-Une fois rentré(e) dans le jeu, il faut:
+##Une fois rentré(e) dans le jeu, il faut:
 	-choisir son personnage en cliquant sur les flèches jaunes.  
 	-rentrer son pseudo qui sera visible par les autres durant la partie (attention, deux joueurs ne peuvent pas avoir le même nom)
 	-cliquer sur créer un serveur.
@@ -30,5 +30,5 @@ Une fois rentré(e) dans le jeu, il faut:
 
 	Lorsque vous perdez ou que vous gagnez, une fenêtre s'affiche afin de vous permettre de quitter le jeu ou de rejouer (rejouer restant la meilleure solution  :D).
 
-IMAGES:
-	![alt text](https://github.com/jorgekorgut/sum.io/Executable du jeu/Projects_photos/main/sumio_lobby.png?raw=true)
+#Images:
+	![Lobby](https://github.com/jorgekorgut/sum.io/Executable du jeu/Projects_photos/main/sumio_lobby.png?raw=true)
