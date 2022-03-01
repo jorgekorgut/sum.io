@@ -31,4 +31,4 @@
 	Lorsque vous perdez ou que vous gagnez, une fenêtre s'affiche afin de vous permettre de quitter le jeu ou de rejouer (rejouer restant la meilleure solution  :D).
 
 #Images:
-	![Lobby]("https://github.com/jorgekorgut/sum.io/Executable du jeu/Projects_photos/main/sumio_lobby.png"?raw=true)
+	![Lobby](./Executable du jeu/Projects_photos/main/sumio_lobby.png?raw=true)
