@@ -29,3 +29,6 @@ Une fois rentré(e) dans le jeu, il faut:
 	Le but du jeu étant de demeurer seul sur la carte, il faut expulser un maximum de ses adversaires en dehors de la carte. 
 
 	Lorsque vous perdez ou que vous gagnez, une fenêtre s'affiche afin de vous permettre de quitter le jeu ou de rejouer (rejouer restant la meilleure solution  :D).
+
+IMAGES:
+	![alt text](https://github.com/jorgekorgut/sum.io/Executable du jeu/Projects_photos/main/sumio_lobby.png?raw=true)
