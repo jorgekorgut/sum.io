@@ -1,17 +1,17 @@
-#README
+# README
 
-##pour executer le programme:
+## Pour executer le programme:
 	-ouvrir le dossier "Exécutable du jeu” et lancer le fichier “sumio.jar”.
 
-##Une fois rentré(e) dans le jeu, il faut:
+## Une fois rentré(e) dans le jeu, il faut:
 	-choisir son personnage en cliquant sur les flèches jaunes.  
 	-rentrer son pseudo qui sera visible par les autres durant la partie (attention, deux joueurs ne peuvent pas avoir le même nom)
 	-cliquer sur créer un serveur.
 	-si vous se connectez sur un réseau, rentrer l'adresse du serveur local suivante dans l'espace prévu à cet effet: " localhost:8000 " 
-/!\ Pour les parties en multijoueurs, vous pouvez partager votre IP adresse à vos amis afin qu'ils vous rejoignent dans la partie. Cette adresse doit être entrée dans 
+## /!\ Pour les parties en multijoueurs, vous pouvez partager votre IP adresse à vos amis afin qu'ils vous rejoignent dans la partie. Cette adresse doit être entrée dans 
     l'espace: rejoindre un serveur (attention, ce mode ne fonctionne que si toutes les personnes utilisent la même connection réseau). 
      
-	
+## Comment jouer?
 	Vous pouvez décider de rajouter des "bots" (intelligences artificielles qui vous affronteront). Pour celà, lorsque l'interface des bots s'affichera, 
 	il suffit de cliquer sur les icônes "+" dans chaque case afin d'activer un adversaire. 
 
@@ -30,5 +30,5 @@
 
 	Lorsque vous perdez ou que vous gagnez, une fenêtre s'affiche afin de vous permettre de quitter le jeu ou de rejouer (rejouer restant la meilleure solution  :D).
 
-#Images:
-	![Lobby](./Executable du jeu/Projects_photos/main/sumio_lobby.png?raw=true)
+# Images:
+	![Lobby](Executable du jeu/Projects_photos/main/sumio_lobby.png?raw=true)
