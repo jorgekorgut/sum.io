@@ -8,8 +8,8 @@
 	-rentrer son pseudo qui sera visible par les autres durant la partie (attention, deux joueurs ne peuvent pas avoir le même nom)
 	-cliquer sur créer un serveur.
 	-si vous se connectez sur un réseau, rentrer l'adresse du serveur local suivante dans l'espace prévu à cet effet: " localhost:8000 " 
-## /!\ Pour les parties en multijoueurs, vous pouvez partager votre IP adresse à vos amis afin qu'ils vous rejoignent dans la partie. Cette adresse doit être entrée dans 
-    l'espace: rejoindre un serveur (attention, ce mode ne fonctionne que si toutes les personnes utilisent la même connection réseau). 
+/!\ Pour les parties en multijoueurs, vous pouvez partager votre IP adresse à vos amis afin qu'ils vous rejoignent dans la partie. Cette adresse doit être entrée dans 
+l'espace: rejoindre un serveur (attention, ce mode ne fonctionne que si toutes les personnes utilisent la même connection réseau). 
      
 ## Comment jouer?
 	Vous pouvez décider de rajouter des "bots" (intelligences artificielles qui vous affronteront). Pour celà, lorsque l'interface des bots s'affichera, 
@@ -31,4 +31,4 @@
 	Lorsque vous perdez ou que vous gagnez, une fenêtre s'affiche afin de vous permettre de quitter le jeu ou de rejouer (rejouer restant la meilleure solution  :D).
 
 # Images:
-	![Lobby](Images_Execution/sumio_lobby.png?raw=true)
+<img src="https://raw.githubusercontent.com/jorgekorgut/sum.io/main/Images_Execution/sumio_lobby.png" width="500">
